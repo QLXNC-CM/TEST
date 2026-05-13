@@ -6,6 +6,10 @@
   <title>KẾT QUẢ VẬN ĐỘNG, TUYÊN TRUYỀN TỔ CHỨC, CÁ NHÂN CHẤP HÀNH QUY ĐỊNH PHÁP LUẬT VỀ SỬ DỤNG THIẾT BỊ BAY KHÔNG NGƯỜI LÁI</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://script.google.com" crossorigin>
+  <link rel="dns-prefetch" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+  <link rel="dns-prefetch" href="https://script.googleusercontent.com">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <style>
     :root{
@@ -57,6 +61,22 @@
     .auth-modal{width:min(460px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:24px;padding:17px;box-shadow:0 30px 70px rgba(0,0,0,.22)}
     .auth-modal h2{margin:0 0 4px;color:var(--primary2);font-size:19px}
     .auth-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+
+    .quick-filter-grid{margin-top:10px;display:grid;gap:8px;max-width:560px}
+    .quick-filter-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .quick-filter-row.single{grid-template-columns:1fr}
+    .quick-filter-grid .btn{width:100%;justify-content:center}
+    .quick-filter-grid .btn.active-filter{background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;border-color:var(--primary);box-shadow:0 8px 18px rgba(22,93,255,.22)}
+    .quick-filter-grid .btn.active-filter:hover{transform:translateY(-1px)}
+    .chart-jump-actions{display:flex;justify-content:flex-end;align-items:center;margin-top:14px}
+    .chart-jump-actions .btn{min-width:220px}
+    .mobile-sticky-actions{display:none}
+    .area-select-modal{width:min(560px,100%)}
+    .area-mismatch-title{margin:0;color:var(--red);font-size:20px;line-height:1.35}
+    .area-mismatch-box{border:1px solid #f8dfaa;background:#fff8e8;color:#8a5a00;border-radius:16px;padding:12px;font-size:14px;line-height:1.5;margin:10px 0}
+    .area-confirm-box{border:1px solid #bce5c8;background:#eaf8ef;color:#0a6b3a;border-radius:16px;padding:12px;font-size:14px;line-height:1.55;margin-top:10px}
+    .area-confirm-box b{font-weight:900;color:#075e35}
+    .area-choice-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     .today-status-card{margin-top:12px;display:none;border:1px solid var(--line);border-radius:18px;background:linear-gradient(160deg,#ffffff,#f8fbff);padding:12px;box-shadow:0 8px 22px rgba(15,63,168,.06)}
     .today-status-card.show{display:block}
     .today-status-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -71,7 +91,7 @@
     .today-area-chip.missing{background:#fff7e6;color:#a16207;border-color:#f8dfaa}
     .today-status-empty{font-size:13px;color:var(--muted);padding:6px 0}
     @media(max-width:980px){.kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{grid-template-columns:1fr 1fr}.mini-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:640px){.brand-head{justify-content:flex-start;gap:6px}.brand-logo{width:58px;height:58px}.brand-agency div:first-child{font-size:12px}.brand-agency div:last-child{font-size:13px}.flycam-icon{width:90px}.kpi-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{padding:10px;border-radius:17px}.kpi .value{font-size:22px}.kpi .sub{font-size:11px}.date-range{grid-template-columns:1fr 1fr}.mini-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.today-status-grid{grid-template-columns:1fr}.auth-actions .btn{width:100%}}
+    @media(max-width:640px){.quick-filter-row{grid-template-columns:1fr}.brand-head{justify-content:flex-start;gap:6px}.brand-logo{width:58px;height:58px}.brand-agency div:first-child{font-size:12px}.brand-agency div:last-child{font-size:13px}.flycam-icon{width:90px}.kpi-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{padding:10px;border-radius:17px}.kpi .value{font-size:22px}.kpi .sub{font-size:11px}.date-range{grid-template-columns:1fr 1fr}.mini-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.today-status-grid{grid-template-columns:1fr}.auth-actions .btn{width:100%}.chart-jump-actions{justify-content:stretch}.chart-jump-actions .btn{width:100%;min-width:0}.mobile-sticky-actions{position:fixed;left:10px;right:10px;bottom:10px;z-index:45;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:18px;box-shadow:0 16px 35px rgba(15,23,42,.18);backdrop-filter:blur(10px)}.mobile-sticky-actions .btn{width:100%;padding:10px 8px;border-radius:13px;font-size:12px}.wrap{padding-bottom:105px}}
 
   </style>
 </head>
@@ -108,15 +128,31 @@
         <div class="view-mode-filter"><label>Kiểu xem biểu đồ</label><select id="viewMode"><option value="cumulative">Lũy kế theo hình thức</option><option value="daily">Theo ngày</option><option value="area">So sánh 04 tổ</option></select></div>
         <div><label>Các hình thức tuyên truyền</label><select id="filterMetric"></select></div>
       </div>
-      <div class="btn-row" style="margin-top:10px">
-        <button class="btn btn-light" onclick="setTodayFilter()">Hôm nay</button>
-        <button class="btn btn-light" onclick="setMonthFilter()">Tháng này</button>
-        <button class="btn btn-light" onclick="resetFilter()">Tất cả dữ liệu</button>
+      <div class="quick-filter-grid" aria-label="Bộ lọc nhanh theo thời gian">
+        <div class="quick-filter-row">
+          <button class="btn btn-light" data-filter="today" onclick="setTodayFilter()">Hôm nay</button>
+          <button class="btn btn-light" data-filter="yesterday" onclick="setYesterdayFilter()">Hôm qua</button>
+        </div>
+        <div class="quick-filter-row">
+          <button class="btn btn-light" data-filter="this-week" onclick="setThisWeekFilter()">Tuần này</button>
+          <button class="btn btn-light" data-filter="last-week" onclick="setLastWeekFilter()">Tuần trước</button>
+        </div>
+        <div class="quick-filter-row">
+          <button class="btn btn-light" data-filter="this-month" onclick="setMonthFilter()">Tháng này</button>
+          <button class="btn btn-light" data-filter="last-month" onclick="setLastMonthFilter()">Tháng trước</button>
+        </div>
+        <div class="quick-filter-row single">
+          <button class="btn btn-light" data-filter="all" onclick="resetFilter()">Tất cả các dữ liệu</button>
+        </div>
       </div>
       <div id="todayReportStatus" class="today-status-card" aria-live="polite"></div>
     </section>
 
     <section class="section kpi-grid" id="kpiGrid"></section>
+
+    <section class="section chart-jump-actions" aria-label="Đi nhanh đến bảng số liệu chi tiết">
+      <button class="btn btn-light" onclick="scrollToDetailTable()">Xem Bảng số liệu chi tiết</button>
+    </section>
 
     <section class="section grid grid-2">
       <div class="card">
@@ -160,12 +196,16 @@
       </div>
     </section>
 
-    <section class="section card">
+    <section class="section card" id="detailTableSection">
       <div class="section-title"><h2>📋 Bảng số liệu chi tiết</h2><span class="pill gray" id="tableCount">0 dòng</span></div>
       <div class="table-wrap"><table><thead><tr><th>Ngày</th><th>Địa bàn</th><th>Tờ rơi</th><th>Cam kết</th><th>Loa</th><th>MXH</th><th>Poster</th><th>Khác</th><th>Tổng</th><th>Ghi chú</th><th>Cập nhật</th><th>Thao tác</th></tr></thead><tbody id="reportTableBody"></tbody></table></div>
     </section>
 
-    <div class="footer-note">File HTML này đang dùng Google Sheet qua Apps Script cố định trong code. Không dùng Local Storage làm dữ liệu chính.</div>
+  </div>
+
+  <div class="mobile-sticky-actions" aria-label="Thanh thao tác nhanh trên điện thoại">
+    <button class="btn btn-primary" onclick="scrollToReportForm()">BÁO CÁO SỐ LIỆU</button>
+    <button class="btn btn-light" onclick="scrollToTopPage()">VỀ TRANG CHỦ</button>
   </div>
 
   <div id="authModal" class="modal-backdrop" onclick="closeAuthOnBackdrop(event)">
@@ -192,10 +232,46 @@
         <input id="authPin" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu xác nhận">
       </div>
       <div class="auth-actions">
-        <button class="btn btn-primary" onclick="saveReport()">Xác nhận lưu báo cáo</button>
+        <button class="btn btn-primary" id="confirmSaveReportButton" onclick="saveReport()">Xác nhận lưu báo cáo</button>
         <button class="btn btn-light" onclick="closeAuthModal()">Hủy</button>
       </div>
       <div id="authMsg" class="message"></div>
+    </div>
+  </div>
+
+  <div id="areaMismatchModal" class="modal-backdrop" onclick="closeAreaMismatchOnBackdrop(event)">
+    <div class="auth-modal area-select-modal">
+      <div id="areaMismatchQuestion">
+        <div class="modal-head">
+          <div>
+            <h2 class="area-mismatch-title">Đúng mật khẩu nhưng SAI ĐỊA BÀN</h2>
+            <div class="muted">Tài khoản đã được xác thực, nhưng địa bàn đang chọn chưa phù hợp với tài khoản.</div>
+          </div>
+          <button class="btn btn-light" onclick="cancelAreaMismatch()">Đóng</button>
+        </div>
+        <div class="area-mismatch-box" id="areaMismatchQuestionText">Đồng chí có muốn chọn lại địa bàn nhập số liệu không?</div>
+        <div class="area-choice-actions">
+          <button class="btn btn-light" onclick="cancelAreaMismatch()">HỦY</button>
+          <button class="btn btn-primary" onclick="showAreaMismatchChooser()">CHỌN LẠI ĐỊA BÀN</button>
+        </div>
+      </div>
+      <div id="areaMismatchChooser" style="display:none">
+        <div class="modal-head">
+          <div>
+            <h2>Chọn lại địa bàn nhập số liệu</h2>
+            <div class="muted">Chọn một trong 04 địa bàn, sau đó bấm XÁC NHẬN.</div>
+          </div>
+          <button class="btn btn-light" onclick="cancelAreaMismatch()">Đóng</button>
+        </div>
+        <label>Địa bàn nhập số liệu</label>
+        <select id="mismatchAreaSelect" onchange="updateMismatchConfirmText()"></select>
+        <div id="areaMismatchConfirmText" class="area-confirm-box"></div>
+        <div class="area-choice-actions">
+          <button class="btn btn-light" onclick="returnFromAreaMismatch()">Trở về màn hình chính</button>
+          <button class="btn btn-primary" id="confirmMismatchAreaButton" onclick="confirmMismatchArea()">XÁC NHẬN</button>
+        </div>
+        <div id="areaMismatchMsg" class="message"></div>
+      </div>
     </div>
   </div>
 
@@ -274,7 +350,7 @@
   </div>
 
 <script>
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwbqkNlxwYYifoyvOIJlQBRLggMDPEE_7C61V31-zGT5m2K78nF5tcLfsCcQUASVuBD/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzk9Yn7i0hdtkXHC-uSXJUApc-65ZXydtKXjkwP2qKxsMRyb-xIdGbsIMUAjZTE_pWW/exec';
 
 const METRICS = [
   { key:'flyerCount', label:'Phát tờ rơi', short:'Tờ rơi', icon:'📄' },
@@ -300,12 +376,20 @@ let authUsersLoadedOnce = false;
 let authUsersLoading = false;
 let authUserLoadPromise = null;
 let filterCache = { key:'', data:[] };
+let pendingAreaMismatch = null;
+let savingReport = false;
+let activeQuickFilter = '';
+const PUBLIC_CACHE_KEY = 'uav_public_data_cache_v2';
+const PUBLIC_CACHE_MAX_AGE_MS = 10 * 60 * 1000;
 
 const $ = id => document.getElementById(id);
-const todayISO = () => {
+const dateOffsetISO = (offsetDays=0) => {
   const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 };
+const todayISO = () => dateOffsetISO(0);
+const yesterdayISO = () => dateOffsetISO(-1);
 const _ESC = {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'};
 const html = s => String(s ?? '').replace(/[&<>'"]/g, c => _ESC[c]);
 const num = v => Number.isFinite(Number(v)) && Number(v) > 0 ? Math.round(Number(v)) : 0;
@@ -358,7 +442,12 @@ async function callApi(action, payload={}){
   let data;
   try { data = JSON.parse(text); }
   catch(e){ throw new Error('Apps Script chưa trả JSON hợp lệ. Nội dung nhận được: ' + text.slice(0,160)); }
-  if(!data.ok) throw new Error(data.error || 'Yêu cầu không thành công.');
+  if(!data.ok){
+    const err = new Error(data.error || data.message || 'Yêu cầu không thành công.');
+    err.data = data;
+    err.errorCode = data.errorCode || data.code || '';
+    throw err;
+  }
   return data;
 }
 
@@ -376,9 +465,9 @@ async function testConnection(showAlert=true){
   }
 }
 
-async function refreshData(checkConnection=false){
+async function refreshData(checkConnection=false, quiet=false){
   try{
-    setApiStatus('Đang tải dữ liệu từ Google Sheet...', 'wait');
+    setApiStatus(quiet ? 'Đang đồng bộ lại Google Sheet...' : 'Đang tải dữ liệu từ Google Sheet...', 'wait');
     const data = await callApi('getPublicData', {});
     app.areas = Array.isArray(data.areas) ? data.areas : [];
     app.reports = Array.isArray(data.reports) ? data.reports.map(normalizeReport) : [];
@@ -391,12 +480,13 @@ async function refreshData(checkConnection=false){
     populateOptions();
     rebuildAuthUserList();
     renderAll();
+    cachePublicData();
     setApiStatus('Đã tải dữ liệu thành công.', 'ok');
     $('lastUpdatedPill').textContent = 'Cập nhật: ' + nowText();
   }catch(err){
     console.error(err);
-    setApiStatus('Lỗi tải dữ liệu: ' + err.message, 'err');
-    renderEmptyOnError(err.message);
+    setApiStatus((quiet ? 'Đã lưu, nhưng chưa đồng bộ lại được: ' : 'Lỗi tải dữ liệu: ') + err.message, 'err');
+    if(!quiet) renderEmptyOnError(err.message);
   }
 }
 
@@ -405,6 +495,64 @@ function normalizeReport(r){
   METRICS.forEach(m => copy[m.key] = num(copy[m.key]));
   copy.updateCount = num(copy.updateCount) || 1;
   return copy;
+}
+
+function cachePublicData(){
+  try{
+    sessionStorage.setItem(PUBLIC_CACHE_KEY, JSON.stringify({
+      cachedAt: Date.now(),
+      areas: app.areas || [],
+      reports: app.reports || [],
+      settings: app.settings || {},
+      users: app.users || []
+    }));
+  }catch(err){
+    console.warn('Không thể lưu cache tạm:', err.message || err);
+  }
+}
+
+function loadCachedPublicData(){
+  try{
+    const raw = sessionStorage.getItem(PUBLIC_CACHE_KEY);
+    if(!raw) return false;
+    const cached = JSON.parse(raw);
+    if(!cached || !cached.cachedAt || Date.now() - Number(cached.cachedAt) > PUBLIC_CACHE_MAX_AGE_MS) return false;
+    app.areas = Array.isArray(cached.areas) ? cached.areas : [];
+    app.reports = Array.isArray(cached.reports) ? cached.reports.map(normalizeReport) : [];
+    app.settings = cached.settings || {};
+    app.users = Array.isArray(cached.users) ? cached.users.map(normalizeUser) : [];
+    app.dataVersion = (app.dataVersion || 0) + 1;
+    filterCache.key = '';
+    authUsersLoadedOnce = app.users.length > 0;
+    $('appTitle').textContent = app.settings.appName || $('appTitle').textContent;
+    populateOptions();
+    rebuildAuthUserList();
+    renderAll();
+    setApiStatus('Đang hiển thị nhanh dữ liệu đã tải gần đây, sẽ đồng bộ Google Sheet...', 'wait');
+    $('lastUpdatedPill').textContent = 'Dữ liệu tạm: ' + new Date(cached.cachedAt).toLocaleString('vi-VN');
+    return true;
+  }catch(err){
+    console.warn('Không thể đọc cache tạm:', err.message || err);
+    return false;
+  }
+}
+
+function upsertReportInMemory(report, serverReport={}){
+  const currentIndex = app.reports.findIndex(r => r.areaId === report.areaId && r.reportDate === report.reportDate && String(r.status || 'active') !== 'deleted');
+  const base = currentIndex >= 0 ? app.reports[currentIndex] : {};
+  const merged = normalizeReport(Object.assign({}, base, report, serverReport, {
+    reportId: serverReport.reportId || base.reportId || `pending-${report.areaId}-${report.reportDate}-${Date.now()}`,
+    status: serverReport.status || base.status || 'active',
+    createdAt: serverReport.createdAt || base.createdAt || nowText(),
+    updatedAt: serverReport.updatedAt || nowText(),
+    updateCount: serverReport.updateCount || (currentIndex >= 0 ? num(base.updateCount) + 1 : 1)
+  }));
+  if(currentIndex >= 0) app.reports[currentIndex] = merged;
+  else app.reports.push(merged);
+  app.dataVersion = (app.dataVersion || 0) + 1;
+  filterCache.key = '';
+  cachePublicData();
+  renderAll();
 }
 
 function looksLikeUserObject(obj){
@@ -710,6 +858,149 @@ function resolveAuthLogin(value){
   );
   return match ? (match.loginValue || match.phone || match.username || raw) : raw;
 }
+
+function findKnownUserByLogin(login){
+  const q = normalizeSearchText(login);
+  if(!q) return null;
+  const rawUsers = [];
+  if(Array.isArray(app.users)) rawUsers.push(...app.users);
+  if(Array.isArray(adminUsers)) rawUsers.push(...adminUsers);
+  return rawUsers.map(normalizeUser).find(u =>
+    normalizeSearchText(u.phone) === q ||
+    normalizeSearchText(u.username) === q ||
+    normalizeSearchText(u.fullName) === q
+  ) || null;
+}
+
+function roleText(user){
+  const pos = String((user && user.position) || '').trim();
+  if(pos) return pos;
+  const role = normalizeSearchText((user && user.role) || '');
+  if(role.includes('pho')) return 'Tổ phó';
+  if(role.includes('lead') || role.includes('to truong') || role.includes('area')) return 'Tổ trưởng/Tổ phó';
+  if(role.includes('admin')) return 'Admin';
+  return 'Tổ trưởng/Tổ phó';
+}
+
+function safeUserName(user){
+  return String((user && (user.fullName || user.name || user.username || user.phone)) || 'đồng chí').trim();
+}
+
+function setButtonLoading(buttonId, isLoading, loadingText){
+  const btn = $(buttonId);
+  if(!btn) return;
+  if(isLoading){
+    btn.dataset.oldText = btn.textContent;
+    btn.textContent = loadingText || 'Đang xử lý...';
+    btn.disabled = true;
+  }else{
+    btn.textContent = btn.dataset.oldText || btn.textContent;
+    btn.disabled = false;
+  }
+}
+
+function openAreaMismatchModal(user, report, message){
+  const safeUser = normalizeUser(user || findKnownUserByLogin(resolveAuthLogin($('authPhone').value.trim())) || {});
+  pendingAreaMismatch = {
+    user: safeUser,
+    report: Object.assign({}, report || buildReportPayload()),
+    auth: { phone: resolveAuthLogin($('authPhone').value.trim()), pin: $('authPin').value.trim() }
+  };
+  $('authModal').classList.remove('show');
+  hideAuthUserMenu();
+  $('areaMismatchQuestion').style.display = 'block';
+  $('areaMismatchChooser').style.display = 'none';
+  $('areaMismatchMsg').innerHTML = '';
+  const selectedArea = areaName((report || {}).areaId || $('reportArea').value);
+  const userArea = areaName(safeUser.areaId);
+  $('areaMismatchQuestionText').innerHTML = `${html(message || 'Đúng mật khẩu nhưng SAI ĐỊA BÀN, đồng chí có muốn chọn lại địa bàn nhập số liệu không?')}<br><br><b>Địa bàn đang chọn:</b> ${html(selectedArea || 'Chưa xác định')}<br><b>Địa bàn của tài khoản:</b> ${html(userArea || 'Chưa xác định')}`;
+  $('areaMismatchModal').classList.add('show');
+}
+
+function cancelAreaMismatch(){
+  pendingAreaMismatch = null;
+  $('areaMismatchModal').classList.remove('show');
+  $('areaMismatchMsg').innerHTML = '';
+  closeAuthModal();
+}
+
+function closeAreaMismatchOnBackdrop(e){
+  if(e.target.id === 'areaMismatchModal') cancelAreaMismatch();
+}
+
+function returnFromAreaMismatch(){
+  cancelAreaMismatch();
+  scrollToReportForm();
+}
+
+function showAreaMismatchChooser(){
+  if(!pendingAreaMismatch) return;
+  const select = $('mismatchAreaSelect');
+  select.innerHTML = app.areas.map(a => `<option value="${html(a.areaId)}">${html(a.name)}</option>`).join('');
+  const defaultArea = pendingAreaMismatch.user.areaId || pendingAreaMismatch.report.areaId || (app.areas[0] || {}).areaId || '';
+  if(app.areas.some(a => a.areaId === defaultArea)) select.value = defaultArea;
+  $('areaMismatchQuestion').style.display = 'none';
+  $('areaMismatchChooser').style.display = 'block';
+  updateMismatchConfirmText();
+}
+
+function updateMismatchConfirmText(){
+  if(!pendingAreaMismatch) return;
+  const user = pendingAreaMismatch.user || {};
+  const selectedAreaId = $('mismatchAreaSelect').value;
+  const userArea = areaName(user.areaId) || 'chưa xác định';
+  const selectedArea = areaName(selectedAreaId) || 'chưa xác định';
+  $('areaMismatchConfirmText').innerHTML = `Đ/c ${html(safeUserName(user))} - ${html(roleText(user))} địa bàn ${html(userArea)} xác nhận nhập số liệu địa bàn <b>${html(selectedArea)}</b>.`;
+}
+
+async function confirmMismatchArea(){
+  if(!pendingAreaMismatch) return;
+  const selectedAreaId = $('mismatchAreaSelect').value;
+  if(!selectedAreaId) return showMessage('areaMismatchMsg', 'Vui lòng chọn địa bàn nhập số liệu.', 'error', true);
+  const report = Object.assign({}, pendingAreaMismatch.report, { areaId:selectedAreaId });
+  $('reportArea').value = selectedAreaId;
+  updateMismatchConfirmText();
+  await saveReportToServer(report, pendingAreaMismatch.auth, { fromMismatch:true, allowMismatchPrompt:false });
+}
+
+async function saveReportToServer(report, auth, options={}){
+  if(savingReport) return;
+  savingReport = true;
+  const buttonId = options.fromMismatch ? 'confirmMismatchAreaButton' : 'confirmSaveReportButton';
+  setButtonLoading(buttonId, true, options.fromMismatch ? 'Đang xác nhận...' : 'Đang lưu...');
+  const msgId = options.fromMismatch ? 'areaMismatchMsg' : 'authMsg';
+  try{
+    showMessage(msgId, 'Đang xác nhận và lưu dữ liệu vào Google Sheet...', 'warning', true);
+    const data = await callApi('upsertReport', { auth, report, userAgent:navigator.userAgent });
+    if(options.fromMismatch){
+      $('areaMismatchMsg').innerHTML = '';
+      $('areaMismatchModal').classList.remove('show');
+      pendingAreaMismatch = null;
+    }else{
+      closeAuthModal();
+    }
+    const serverReport = data.report || data.savedReport || data.row || {};
+    upsertReportInMemory(report, serverReport);
+    const savedArea = areaName(report.areaId);
+    showMessage('reportMsg', `Đã lưu báo cáo thành công cho địa bàn ${savedArea}. Giao diện đã cập nhật nhanh, hệ thống đang đồng bộ lại Google Sheet.`, 'success');
+    refreshData(false, true);
+    return data;
+  }catch(err){
+    console.error(err);
+    const data = err.data || {};
+    const code = err.errorCode || data.errorCode || data.code || '';
+    if(code === 'AREA_MISMATCH' && options.allowMismatchPrompt !== false){
+      openAreaMismatchModal(data.user || data.authUser || {}, report, data.error || data.message || err.message);
+      return null;
+    }
+    showMessage(msgId, 'Lỗi lưu báo cáo: ' + err.message, 'error', true);
+    return null;
+  }finally{
+    savingReport = false;
+    setButtonLoading(buttonId, false);
+  }
+}
+
 
 function areaName(areaId){ return (app.areas.find(a => a.areaId === areaId) || {}).name || areaId || ''; }
 function metricLabel(key){ if(key === 'total') return 'Tổng tất cả hình thức'; return (METRICS.find(m => m.key === key) || {}).label || key; }
@@ -1049,29 +1340,56 @@ async function saveReport(){
   const report = buildReportPayload();
   const error = validateReportPayload(report, true);
   if(error) return showMessage('authMsg', error, error.startsWith('Đã hủy') ? 'warning' : 'error', true);
-  try{
-    showMessage('authMsg', 'Đang lưu dữ liệu vào Google Sheet...', 'warning', true);
-    await callApi('upsertReport', {
-      auth:{ phone:resolveAuthLogin($('authPhone').value.trim()), pin:$('authPin').value.trim() },
-      report,
-      userAgent:navigator.userAgent
-    });
-    closeAuthModal();
-    await refreshData(true);
-    showMessage('reportMsg', 'Đã lưu báo cáo thành công.', 'success');
-  }catch(err){
-    console.error(err);
-    showMessage('authMsg', 'Lỗi lưu báo cáo: ' + err.message, 'error', true);
-  }
+  const auth = { phone:resolveAuthLogin($('authPhone').value.trim()), pin:$('authPin').value.trim() };
+  await saveReportToServer(report, auth, { allowMismatchPrompt:true });
 }
 
-function setTodayFilter(){ $('filterFromDate').value = todayISO(); $('filterToDate').value = todayISO(); filterCache.key = ''; requestAnimationFrame(renderAll); }
-function setMonthFilter(){ const d = new Date(); $('filterFromDate').value = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`; $('filterToDate').value = todayISO(); filterCache.key = ''; requestAnimationFrame(renderAll); }
-function resetFilter(){ $('filterFromDate').value = ''; $('filterToDate').value = ''; $('filterArea').value = ''; filterCache.key = ''; requestAnimationFrame(renderAll); }
+function toISODate(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function setActiveQuickFilter(key=''){
+  activeQuickFilter = key || '';
+  document.querySelectorAll('.quick-filter-grid [data-filter]').forEach(btn => {
+    btn.classList.toggle('active-filter', btn.dataset.filter === activeQuickFilter);
+  });
+}
+function setRangeFilter(fromDate, toDate, quickKey=''){
+  $('filterFromDate').value = fromDate;
+  $('filterToDate').value = toDate;
+  setActiveQuickFilter(quickKey);
+  filterCache.key = '';
+  requestAnimationFrame(renderAll);
+}
+function setSingleDateFilter(dateValue, quickKey=''){ setRangeFilter(dateValue, dateValue, quickKey); }
+function getWeekRange(offsetWeeks=0){
+  const d = new Date();
+  const mondayOffset = (d.getDay() + 6) % 7;
+  const start = new Date(d.getFullYear(), d.getMonth(), d.getDate() - mondayOffset + offsetWeeks * 7);
+  const end = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6);
+  return { from:toISODate(start), to:toISODate(end) };
+}
+function getMonthRange(offsetMonths=0){
+  const d = new Date();
+  const start = new Date(d.getFullYear(), d.getMonth() + offsetMonths, 1);
+  const end = new Date(d.getFullYear(), d.getMonth() + offsetMonths + 1, 0);
+  return { from:toISODate(start), to:toISODate(end) };
+}
+function setTodayFilter(){ setSingleDateFilter(todayISO(), 'today'); }
+function setYesterdayFilter(){ setSingleDateFilter(yesterdayISO(), 'yesterday'); }
+function setThisWeekFilter(){ const r = getWeekRange(0); setRangeFilter(r.from, r.to, 'this-week'); }
+function setLastWeekFilter(){ const r = getWeekRange(-1); setRangeFilter(r.from, r.to, 'last-week'); }
+function setMonthFilter(){ const r = getMonthRange(0); setRangeFilter(r.from, r.to, 'this-month'); }
+function setLastMonthFilter(){ const r = getMonthRange(-1); setRangeFilter(r.from, r.to, 'last-month'); }
+function resetFilter(){ $('filterFromDate').value = ''; $('filterToDate').value = ''; $('filterArea').value = ''; setActiveQuickFilter('all'); filterCache.key = ''; requestAnimationFrame(renderAll); }
 
 function scrollToReportForm(){
   const section = $('reportSection');
   if(section) section.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function scrollToDetailTable(){
+  const section = $('detailTableSection');
+  if(section) section.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function scrollToTopPage(){
+  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
 function openAdminModal(){ $('adminModal').classList.add('show'); if(adminAuth){ renderAdminReports(); fillSettingsForm(); } }
@@ -1086,7 +1404,9 @@ async function adminLogin(){
     adminAuth = { phone:login, pin }; adminUser = data.user;
     $('adminLoginBox').style.display = 'none'; $('adminPanel').style.display = 'block';
     $('adminNamePill').textContent = 'Admin: ' + (adminUser.fullName || adminUser.username || adminUser.phone);
-    await loadUsers(); await loadLogs(); renderAdminReports(); fillSettingsForm();
+    renderAdminReports(); fillSettingsForm();
+    loadUsers();
+    loadLogs();
   }catch(err){ showMessage('adminLoginMsg', err.message, 'error', true); }
 }
 
@@ -1187,7 +1507,8 @@ function scheduleRenderAll(){
   renderFrame = requestAnimationFrame(() => { renderFrame = null; filterCache.key = ''; renderAll(); });
 }
 function bindEvents(){
-  ['filterFromDate','filterToDate','filterArea','viewMode','filterMetric'].forEach(id => $(id).addEventListener('change', scheduleRenderAll));
+  ['filterFromDate','filterToDate'].forEach(id => $(id).addEventListener('change', () => { setActiveQuickFilter(''); scheduleRenderAll(); }));
+  ['filterArea','viewMode','filterMetric'].forEach(id => $(id).addEventListener('change', scheduleRenderAll));
   ['reportArea','reportDate'].forEach(id => $(id).addEventListener('change', loadReportForForm));
   ['authPhone','authPin'].forEach(id => { const el=$(id); if(el) el.addEventListener('keydown', e => { if(e.key === 'Enter') saveReport(); }); });
   const authPhone = $('authPhone');
@@ -1232,7 +1553,10 @@ function initDefaults(){
 
 document.addEventListener('DOMContentLoaded', async () => {
   METRICS.forEach(m => { if(!$(m.key)) console.warn('Missing input', m.key); });
-  bindEvents(); initDefaults(); await refreshData(false);
+  bindEvents();
+  initDefaults();
+  loadCachedPublicData();
+  await refreshData(false);
 });
 </script>
 </body>
