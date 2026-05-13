@@ -20,15 +20,15 @@
     @media(max-width:980px){.grid-2,.grid-3,.grid-4,.grid-6{grid-template-columns:1fr 1fr}.toolbar{grid-template-columns:1fr 1fr}.hero{display:block}.hero-actions{margin-top:12px;justify-content:flex-start}.brand h1{font-size:18px}}
     @media(max-width:640px){.wrap{padding:10px 10px 60px}.grid-2,.grid-3,.grid-4,.grid-6,.toolbar{grid-template-columns:1fr}.chart-box{height:280px}.btn{width:100%}.btn-row .btn{width:auto}.hero-actions .btn{width:auto}.card{padding:13px}.brand h1{font-size:16px}table{min-width:900px}}
   
-    .brand-head{display:flex;align-items:center;justify-content:flex-start;gap:12px;position:relative;z-index:1}
-    .brand-agency{font-weight:900;color:var(--primary2);letter-spacing:.45px;text-transform:uppercase;line-height:1.35}
+    .brand-head{display:flex;align-items:center;justify-content:flex-start;gap:6px;position:relative;z-index:1}
+    .brand-agency{font-weight:900;color:var(--primary2);letter-spacing:.45px;text-transform:uppercase;line-height:1.35;margin-left:-2px}
     .brand-agency div:first-child{font-size:14px}.brand-agency div:last-child{font-size:15px}
     .brand-logo{width:74px;height:74px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 8px 14px rgba(15,63,168,.14))}
     .filter-card{position:relative;overflow:hidden}
     .flycam-banner{display:flex;justify-content:center;align-items:center;margin:-2px 0 8px}
     .flycam-icon{width:108px;max-width:28vw;height:auto;object-fit:contain;filter:drop-shadow(0 8px 12px rgba(15,23,42,.14))}
-    .date-range{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .toolbar{grid-template-columns:1.2fr 1fr 1.35fr}
+    .date-range{display:grid;grid-template-columns:1fr 1fr;gap:10px;grid-column:1/-1}
+    .toolbar{grid-template-columns:1fr 1fr}
     .area-filter{grid-column:1/-1}
     .kpi-grid{display:grid;gap:10px;grid-template-columns:repeat(6,minmax(0,1fr))}
     .summary-grid{display:grid;gap:10px;grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -41,7 +41,7 @@
     .auth-modal h2{margin:0 0 4px;color:var(--primary2);font-size:19px}
     .auth-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     @media(max-width:980px){.kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{grid-template-columns:1fr 1fr}.mini-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:640px){.brand-head{justify-content:space-between}.brand-logo{width:58px;height:58px}.brand-agency div:first-child{font-size:12px}.brand-agency div:last-child{font-size:13px}.flycam-icon{width:90px}.kpi-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{padding:10px;border-radius:17px}.kpi .value{font-size:22px}.kpi .sub{font-size:11px}.date-range{grid-template-columns:1fr 1fr}.mini-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.auth-actions .btn{width:100%}}
+    @media(max-width:640px){.brand-head{justify-content:flex-start;gap:6px}.brand-logo{width:58px;height:58px}.brand-agency div:first-child{font-size:12px}.brand-agency div:last-child{font-size:13px}.flycam-icon{width:90px}.kpi-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{padding:10px;border-radius:17px}.kpi .value{font-size:22px}.kpi .sub{font-size:11px}.date-range{grid-template-columns:1fr 1fr}.mini-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.auth-actions .btn{width:100%}}
 
   </style>
 </head>
@@ -75,7 +75,7 @@
           <div><label>Từ ngày</label><input type="date" id="filterFromDate"></div>
           <div><label>Đến ngày</label><input type="date" id="filterToDate"></div>
         </div>
-        <div><label>Kiểu xem</label><select id="viewMode"><option value="cumulative">Lũy kế theo hình thức</option><option value="daily">Theo ngày</option><option value="area">So sánh 04 tổ</option></select></div>
+        <div class="view-mode-filter"><label>Kiểu xem biểu đồ</label><select id="viewMode"><option value="cumulative">Lũy kế theo hình thức</option><option value="daily">Theo ngày</option><option value="area">So sánh 04 tổ</option></select></div>
         <div><label>Các hình thức tuyên truyền</label><select id="filterMetric"></select></div>
       </div>
       <div class="btn-row" style="margin-top:10px">
