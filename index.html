@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KẾT QUẢ VẬN ĐỘNG, TUYÊN TRUYỀN TỔ CHỨC, CÁ NHÂN CHẤP HÀNH QUY ĐỊNH PHÁP LUẬT VỀ SỬ DỤNG THIẾT BỊ BAY KHÔNG NGƯỜI LÁI</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <style>
     :root{
       --primary:#165dff;--primary2:#0f3fa8;--green:#0e9f6e;--orange:#f59e0b;--red:#dc2626;
@@ -40,11 +42,36 @@
     .report-title{display:block;margin-bottom:6px}
     .report-title h2{display:block;width:100%}
     .report-password-note{margin:0 0 12px 0;display:block}
+    .auth-combo{position:relative}
+    .auth-input-wrap{position:relative}
+    .auth-input-wrap input{padding-right:48px}
+    .auth-drop-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:1px solid var(--line);border-radius:12px;background:#f8fbff;color:var(--primary2);font-weight:900;font-size:17px;line-height:1;cursor:pointer;z-index:2}
+    .auth-drop-btn:hover{background:#eef5ff}
+    .auth-user-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:80;display:none;max-height:245px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 42px rgba(15,23,42,.18);padding:6px}
+    .auth-user-menu.show{display:block}
+    .auth-user-item{width:100%;border:0;background:#fff;text-align:left;padding:10px 11px;border-radius:12px;cursor:pointer;color:var(--text);display:block}
+    .auth-user-item:hover,.auth-user-item.active{background:#eef5ff}
+    .auth-user-item b{display:block;font-size:14px;color:var(--primary2);margin-bottom:2px}
+    .auth-user-item span{display:block;font-size:12px;color:var(--muted);line-height:1.35}
+    .auth-user-empty{padding:12px;color:var(--muted);font-size:13px;text-align:center}
     .auth-modal{width:min(460px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:24px;padding:17px;box-shadow:0 30px 70px rgba(0,0,0,.22)}
     .auth-modal h2{margin:0 0 4px;color:var(--primary2);font-size:19px}
     .auth-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .today-status-card{margin-top:12px;display:none;border:1px solid var(--line);border-radius:18px;background:linear-gradient(160deg,#ffffff,#f8fbff);padding:12px;box-shadow:0 8px 22px rgba(15,63,168,.06)}
+    .today-status-card.show{display:block}
+    .today-status-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .today-status-head h3{margin:0;color:var(--primary2);font-size:16px;line-height:1.35}
+    .today-status-sub{margin-top:3px;color:var(--muted);font-size:13px}
+    .today-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .today-status-box{border:1px solid #e6eef8;background:#fff;border-radius:16px;padding:10px;min-height:92px}
+    .today-status-box h4{margin:0 0 8px;font-size:14px;color:var(--text);display:flex;align-items:center;gap:6px}
+    .today-status-chips{display:flex;flex-wrap:wrap;gap:7px}
+    .today-area-chip{display:inline-flex;align-items:center;border-radius:999px;padding:6px 9px;font-size:12px;font-weight:800;background:#eef5ff;color:#1d4ed8;border:1px solid #d8e7ff}
+    .today-area-chip.ok{background:#e8f8f0;color:#057a55;border-color:#bce5c8}
+    .today-area-chip.missing{background:#fff7e6;color:#a16207;border-color:#f8dfaa}
+    .today-status-empty{font-size:13px;color:var(--muted);padding:6px 0}
     @media(max-width:980px){.kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{grid-template-columns:1fr 1fr}.mini-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:640px){.brand-head{justify-content:flex-start;gap:6px}.brand-logo{width:58px;height:58px}.brand-agency div:first-child{font-size:12px}.brand-agency div:last-child{font-size:13px}.flycam-icon{width:90px}.kpi-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{padding:10px;border-radius:17px}.kpi .value{font-size:22px}.kpi .sub{font-size:11px}.date-range{grid-template-columns:1fr 1fr}.mini-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.auth-actions .btn{width:100%}}
+    @media(max-width:640px){.brand-head{justify-content:flex-start;gap:6px}.brand-logo{width:58px;height:58px}.brand-agency div:first-child{font-size:12px}.brand-agency div:last-child{font-size:13px}.flycam-icon{width:90px}.kpi-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{padding:10px;border-radius:17px}.kpi .value{font-size:22px}.kpi .sub{font-size:11px}.date-range{grid-template-columns:1fr 1fr}.mini-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.today-status-grid{grid-template-columns:1fr}.auth-actions .btn{width:100%}}
 
   </style>
 </head>
@@ -86,6 +113,7 @@
         <button class="btn btn-light" onclick="setMonthFilter()">Tháng này</button>
         <button class="btn btn-light" onclick="resetFilter()">Tất cả dữ liệu</button>
       </div>
+      <div id="todayReportStatus" class="today-status-card" aria-live="polite"></div>
     </section>
 
     <section class="section kpi-grid" id="kpiGrid"></section>
@@ -151,8 +179,13 @@
       </div>
       <div>
         <label>Số điện thoại hoặc tên người dùng</label>
-        <input id="authPhone" list="authUserList" autocomplete="username" placeholder="Chọn trong danh sách hoặc nhập thủ công">
-        <datalist id="authUserList"></datalist>
+        <div class="auth-combo" id="authCombo">
+          <div class="auth-input-wrap">
+            <input id="authPhone" autocomplete="off" placeholder="Chọn tên người dùng hoặc nhập thủ công">
+            <button type="button" class="auth-drop-btn" id="authDropBtn" aria-label="Mở danh sách tên người dùng">▾</button>
+          </div>
+          <div id="authUserMenu" class="auth-user-menu"></div>
+        </div>
       </div>
       <div style="margin-top:10px">
         <label>Mật khẩu</label>
@@ -241,7 +274,7 @@
   </div>
 
 <script>
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwU6OB3YmDAfK9wBgBspJXmlqGcQW0d5iSX-MXD1PXDAC2N78sLsQ8R4-WR-Aag61ZL/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwbqkNlxwYYifoyvOIJlQBRLggMDPEE_7C61V31-zGT5m2K78nF5tcLfsCcQUASVuBD/exec';
 
 const METRICS = [
   { key:'flyerCount', label:'Phát tờ rơi', short:'Tờ rơi', icon:'📄' },
@@ -255,14 +288,26 @@ const METRICS = [
 let app = { areas:[], reports:[], settings:{}, users:[] };
 let mainChart = null;
 let areaChart = null;
+let mainChartType = '';
+let areaChartType = '';
 let adminAuth = null;
 let adminUser = null;
 let adminUsers = [];
+let authUserOptions = [];
+let selectedAuthLogin = '';
+let selectedAuthDisplay = '';
+let authUsersLoadedOnce = false;
+let authUsersLoading = false;
+let authUserLoadPromise = null;
 let filterCache = { key:'', data:[] };
 
 const $ = id => document.getElementById(id);
-const todayISO = () => new Date().toISOString().slice(0,10);
-const html = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const todayISO = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+};
+const _ESC = {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'};
+const html = s => String(s ?? '').replace(/[&<>'"]/g, c => _ESC[c]);
 const num = v => Number.isFinite(Number(v)) && Number(v) > 0 ? Math.round(Number(v)) : 0;
 const fmt = v => new Intl.NumberFormat('vi-VN').format(num(v));
 const dateText = d => d ? d.split('-').reverse().join('/') : '';
@@ -331,25 +376,22 @@ async function testConnection(showAlert=true){
   }
 }
 
-async function refreshData(checkConnection=true){
+async function refreshData(checkConnection=false){
   try{
-    if(checkConnection){
-      setApiStatus('Đang kiểm tra kết nối Apps Script...', 'wait');
-      await callApi('ping', {});
-    }
-    setApiStatus('Kết nối thành công, đang tải dữ liệu từ Google Sheet...', 'wait');
+    setApiStatus('Đang tải dữ liệu từ Google Sheet...', 'wait');
     const data = await callApi('getPublicData', {});
     app.areas = Array.isArray(data.areas) ? data.areas : [];
     app.reports = Array.isArray(data.reports) ? data.reports.map(normalizeReport) : [];
     app.dataVersion = (app.dataVersion || 0) + 1;
     filterCache.key = '';
     app.settings = data.settings || {};
-    app.users = Array.isArray(data.users) ? data.users : [];
+    app.users = extractUsersFromResponse(data).map(normalizeUser);
+    authUsersLoadedOnce = app.users.length > 0;
     $('appTitle').textContent = app.settings.appName || $('appTitle').textContent;
     populateOptions();
     rebuildAuthUserList();
     renderAll();
-    setApiStatus('Đã kiểm tra kết nối và tải dữ liệu thành công.', 'ok');
+    setApiStatus('Đã tải dữ liệu thành công.', 'ok');
     $('lastUpdatedPill').textContent = 'Cập nhật: ' + nowText();
   }catch(err){
     console.error(err);
@@ -358,7 +400,6 @@ async function refreshData(checkConnection=true){
   }
 }
 
-
 function normalizeReport(r){
   const copy = Object.assign({}, r);
   METRICS.forEach(m => copy[m.key] = num(copy[m.key]));
@@ -366,9 +407,85 @@ function normalizeReport(r){
   return copy;
 }
 
+function looksLikeUserObject(obj){
+  if(!obj || typeof obj !== 'object' || Array.isArray(obj)) return false;
+  const keys = Object.keys(obj).map(k => normalizeSearchText(k));
+  const hasLoginKey = keys.some(k => [
+    'phone','phonenumber','phone number','mobile','mobilephone','mobile phone','sdt','so dienthoai','so dien thoai','dien thoai','sdt',
+    'username','user name','login','loginname','login name','tendangnhap','ten dang nhap','tai khoan','account','accountname','account name'
+  ].some(sig => k.includes(sig)));
+  if(!hasLoginKey) return false;
+  const u = normalizeUser(obj);
+  return !!(String(u.phone || '').trim() || String(u.username || '').trim());
+}
+
+function extractUsersFromResponse(data){
+  const results = [];
+  const seen = new Set();
+  const possibleKeys = [
+    'users','publicUsers','public_users','userList','user_list','accounts','accountList','account_list',
+    'taiKhoan','tai_khoan','danhSachTaiKhoan','danh_sach_tai_khoan','dsTaiKhoan','ds_tai_khoan',
+    'nguoiDung','nguoi_dung','danhSachNguoiDung','danh_sach_nguoi_dung','canBo','can_bo'
+  ];
+  const pushArray = arr => {
+    if(!Array.isArray(arr)) return;
+    arr.forEach(item => {
+      if(!looksLikeUserObject(item)) return;
+      const u = normalizeUser(item);
+      const loginKey = normalizeSearchText([u.phone, u.username].filter(Boolean).join('|'));
+      if(!loginKey || seen.has(loginKey)) return;
+      seen.add(loginKey);
+      results.push(u);
+    });
+  };
+
+  if(Array.isArray(data)) pushArray(data);
+  if(data && typeof data === 'object'){
+    possibleKeys.forEach(key => pushArray(data[key]));
+    if(data.data && typeof data.data === 'object') possibleKeys.forEach(key => pushArray(data.data[key]));
+    if(data.payload && typeof data.payload === 'object') possibleKeys.forEach(key => pushArray(data.payload[key]));
+  }
+  return results;
+}
+
+function pickField(obj, keys){
+  for(const key of keys){
+    if(obj && obj[key] !== undefined && obj[key] !== null && String(obj[key]).trim() !== '') return String(obj[key]).trim();
+  }
+  return '';
+}
+
+function normalizeUser(u){
+  const copy = Object.assign({}, u || {});
+  copy.fullName = pickField(copy, [
+    'fullName','full_name','fullname','name','displayName','display_name',
+    'hoTen','ho_ten','hoten','tenNguoiDung','ten_nguoi_dung','ten','Ten',
+    'Họ tên','Họ và tên','Ho ten','Tên','Tên người dùng','Tên cán bộ','Cán bộ'
+  ]) || copy.fullName || '';
+  copy.phone = pickField(copy, [
+    'phone','phoneNumber','phone_number','mobile','mobilePhone','mobile_phone',
+    'sdt','soDienThoai','so_dien_thoai','dienThoai','dien_thoai',
+    'Số điện thoại','Dien thoai','Điện thoại','SĐT','SDT'
+  ]) || copy.phone || '';
+  copy.username = pickField(copy, [
+    'username','userName','user_name','login','loginName','login_name','account','accountName','account_name','user',
+    'tenDangNhap','ten_dang_nhap','taiKhoan','tai_khoan',
+    'Username','Tên đăng nhập','Tài khoản','User'
+  ]) || copy.username || '';
+  copy.areaId = pickField(copy, [
+    'areaId','areaID','area_id','area','areaName','area_name','diaBan','dia_ban','maDiaBan','ma_dia_ban',
+    'Địa bàn','Dia ban','Mã địa bàn','Ma dia ban','Tổ','To'
+  ]) || copy.areaId || '';
+  copy.role = pickField(copy, ['role','vaiTro','vai_tro','Vai trò','Role']) || copy.role || '';
+  copy.position = pickField(copy, ['position','chucVu','chuc_vu','Chức vụ','Chuc vu','positionName']) || copy.position || '';
+  copy.status = pickField(copy, ['status','trangThai','trang_thai','Trạng thái','Trang thai']) || copy.status || 'active';
+  return copy;
+}
+
 function renderEmptyOnError(message){
   $('kpiGrid').innerHTML = `<div class="card" style="grid-column:1/-1"><div class="alert error">${html(message)}</div></div>`;
   $('reportTableBody').innerHTML = `<tr><td colspan="12" class="empty">Không tải được dữ liệu.</td></tr>`;
+  if($('todayReportStatus')){ $('todayReportStatus').classList.remove('show'); $('todayReportStatus').innerHTML = ''; }
 }
 
 function populateOptions(){
@@ -392,29 +509,206 @@ function populateOptions(){
 }
 
 
-function rebuildAuthUserList(){
-  const list = $('authUserList');
-  if(!list) return;
+function normalizeSearchText(s){
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .trim();
+}
+
+
+function mergeUsersIntoApp(users){
+  if(!Array.isArray(users) || !users.length) return 0;
+  const current = Array.isArray(app.users) ? app.users.map(normalizeUser) : [];
+  const seen = new Set(current.map(u => normalizeSearchText([u.phone, u.username, u.fullName].filter(Boolean).join('|'))).filter(Boolean));
+  let added = 0;
+  users.map(normalizeUser).forEach(u => {
+    const key = normalizeSearchText([u.phone, u.username, u.fullName].filter(Boolean).join('|'));
+    if(!key || seen.has(key)) return;
+    seen.add(key);
+    current.push(u);
+    added++;
+  });
+  app.users = current;
+  return added;
+}
+
+function extractUsersFromReportsAndAreas(){
   const users = [];
-  if(Array.isArray(app.users)) users.push(...app.users);
-  if(Array.isArray(adminUsers)) users.push(...adminUsers);
+  const fromReports = Array.isArray(app.reports) ? app.reports : [];
+  fromReports.forEach(r => {
+    const fullName = pickField(r, ['fullName','reporterName','reporter','createdByName','updatedByName','changedByName','changedBy','createdBy','updatedBy','người báo cáo','Người báo cáo','Nguoi bao cao']);
+    const phone = pickField(r, ['phone','reporterPhone','createdByPhone','updatedByPhone','changedByPhone','sdt','Số điện thoại']);
+    const username = pickField(r, ['username','createdByUser','updatedByUser','changedByUser','userName','Tên đăng nhập']);
+    if(fullName || phone || username) users.push({ fullName, phone, username, areaId:r.areaId || '' });
+  });
+  const fromAreas = Array.isArray(app.areas) ? app.areas : [];
+  fromAreas.forEach(a => {
+    const fullName = pickField(a, ['leaderName','leadName','managerName','fullName','nameUser','nguoiPhuTrach','phuTrach','Tổ trưởng','To truong']);
+    const phone = pickField(a, ['leaderPhone','phone','sdt','Số điện thoại']);
+    const username = pickField(a, ['username','leaderUsername','userName']);
+    if(fullName || phone || username) users.push({ fullName, phone, username, areaId:a.areaId || a.id || '' });
+  });
+  return users;
+}
+
+async function ensureAuthUsersLoaded(force=false){
+  // Danh sách tài khoản đã được Apps Script mới trả ngay trong getPublicData,
+  // nên không gọi nhiều API nữa để tránh chậm và tránh hiện 'Đang tải...' lâu.
+  if(authUsersLoading && authUserLoadPromise) return authUserLoadPromise;
+  if(!force && authUserOptions.length) return true;
+
+  authUsersLoading = true;
+  authUserLoadPromise = (async () => {
+    try{
+      // Chỉ gọi thêm 01 API công khai khi getPublicData chưa có danh sách users.
+      if(force || !Array.isArray(app.users) || !app.users.length){
+        const data = await callApi('getPublicUsers', {});
+        const extracted = extractUsersFromResponse(data);
+        if(extracted.length) mergeUsersIntoApp(extracted);
+      }
+    }catch(err){
+      // Nếu Apps Script chưa deploy bản mới, vẫn cho người dùng nhập thủ công.
+      console.warn('Không tải được danh sách tài khoản công khai:', err.message || err);
+    }finally{
+      authUsersLoadedOnce = true;
+      authUsersLoading = false;
+      rebuildAuthUserList(false);
+    }
+    return authUserOptions.length > 0;
+  })();
+
+  return authUserLoadPromise;
+}
+
+function buildAuthUserOptions(){
+  const rawUsers = [];
+  if(Array.isArray(app.users)) rawUsers.push(...app.users);
+  if(Array.isArray(adminUsers)) rawUsers.push(...adminUsers);
+
   const seen = new Set();
   const options = [];
-  const add = (value, label) => {
-    value = String(value || '').trim();
-    if(!value || seen.has(value.toLowerCase())) return;
-    seen.add(value.toLowerCase());
-    options.push(`<option value="${html(value)}" label="${html(label || value)}"></option>`);
-  };
-  users.forEach(u => {
-    const name = u.fullName || u.name || u.username || u.phone || '';
+  rawUsers.map(normalizeUser).forEach(u => {
+    const status = normalizeSearchText(u.status || 'active');
+    if(status && !['active','hoat dong','dang hoat dong'].includes(status)) return;
+    if(normalizeSearchText(u.role || '') === 'admin') return;
+
+    const loginValue = String(u.phone || u.username || '').trim();
+    if(!loginValue) return; // Không đưa địa bàn hoặc dòng dữ liệu không có tài khoản vào dropdown.
+
+    const displayValue = String(u.fullName || u.username || u.phone || '').trim();
+    const key = normalizeSearchText(loginValue);
+    if(seen.has(key)) return;
+    seen.add(key);
+
     const area = u.areaId ? areaName(u.areaId) : '';
-    const note = [name, area].filter(Boolean).join(' - ');
-    add(u.phone, note || 'Số điện thoại');
-    add(u.username, note || 'Tên người dùng');
+    const title = displayValue || loginValue;
+    const identifiers = [u.phone ? 'SĐT: ' + u.phone : '', u.username ? 'Tên đăng nhập: ' + u.username : ''].filter(Boolean).join(' / ');
+    const meta = [identifiers, area, u.position].filter(Boolean).join(' • ');
+    const searchText = normalizeSearchText([u.fullName, u.phone, u.username, area, u.position, title, loginValue].filter(Boolean).join(' '));
+    const sortText = normalizeSearchText(title);
+    options.push({
+      value: title,
+      loginValue,
+      title,
+      meta,
+      phone: u.phone || '',
+      username: u.username || '',
+      fullName: u.fullName || '',
+      search: searchText,
+      _search: searchText,
+      _sort: sortText
+    });
   });
-  if(!options.length) add('admin', 'Tài khoản admin');
-  list.innerHTML = options.join('');
+  options.sort((a,b) => (a._sort || '').localeCompare(b._sort || '', 'vi'));
+  return options;
+}
+
+function rebuildAuthUserList(renderMenu=true){
+  authUserOptions = buildAuthUserOptions();
+  if(renderMenu) renderAuthUserMenu('');
+}
+
+function renderAuthUserMenu(query='', loading=false){
+  const menu = $('authUserMenu');
+  if(!menu) return;
+  if(loading || authUsersLoading){
+    menu.innerHTML = '<div class="auth-user-empty">Đang tải danh sách tài khoản...</div>';
+    return;
+  }
+  const q = normalizeSearchText(query);
+  const terms = q.split(/\s+/).filter(Boolean);
+  let rows = authUserOptions.filter(item => {
+    if(!q) return true;
+    const haystack = item._search || item.search || '';
+    return terms.every(term => haystack.includes(term));
+  }).slice(0, 40);
+
+  let prefix = '';
+  if(!rows.length && authUserOptions.length){
+    rows = authUserOptions.slice(0, 40);
+    prefix = '<div class="auth-user-empty">Không tìm thấy tên trùng khớp. Bạn có thể chọn trong danh sách dưới đây hoặc nhập thủ công.</div>';
+  }
+  if(!rows.length){
+    menu.innerHTML = '<div class="auth-user-empty">Chưa lấy được danh sách tài khoản từ Google Sheet. Bạn vẫn có thể nhập thủ công số điện thoại hoặc tên người dùng.</div>';
+    return;
+  }
+  menu.innerHTML = prefix + rows.map(item => `
+    <button type="button" class="auth-user-item" data-value="${html(item.value)}" data-login="${html(item.loginValue)}">
+      <b>${html(item.title)}</b>
+      <span>${html(item.meta || item.loginValue || item.value)}</span>
+    </button>`).join('');
+}
+
+async function showAuthUserMenu(queryOverride=null){
+  rebuildAuthUserList(false);
+  const input = $('authPhone');
+  const menu = $('authUserMenu');
+  if(!input || !menu) return;
+  menu.classList.add('show');
+  const getQuery = () => queryOverride === null ? input.value : queryOverride;
+
+  if(!authUserOptions.length && !authUsersLoadedOnce){
+    renderAuthUserMenu('', true);
+    await ensureAuthUsersLoaded(false);
+  }
+  renderAuthUserMenu(getQuery());
+}
+
+function toggleAuthUserMenu(){
+  const menu = $('authUserMenu');
+  if(menu && menu.classList.contains('show')) hideAuthUserMenu();
+  else showAuthUserMenu('');
+}
+
+function hideAuthUserMenu(){
+  const menu = $('authUserMenu');
+  if(menu) menu.classList.remove('show');
+}
+
+function selectAuthUser(value, loginValue=''){
+  selectedAuthDisplay = value || '';
+  selectedAuthLogin = loginValue || '';
+  $('authPhone').value = selectedAuthDisplay;
+  hideAuthUserMenu();
+  setTimeout(() => $('authPin').focus(), 50);
+}
+
+function resolveAuthLogin(value){
+  const raw = String(value || '').trim();
+  if(!raw) return '';
+  const q = normalizeSearchText(raw);
+  if(selectedAuthLogin && normalizeSearchText(selectedAuthDisplay) === q) return selectedAuthLogin;
+  const match = authUserOptions.find(item =>
+    normalizeSearchText(item.value) === q ||
+    normalizeSearchText(item.loginValue) === q ||
+    normalizeSearchText(item.phone) === q ||
+    normalizeSearchText(item.username) === q ||
+    normalizeSearchText(item.fullName) === q
+  );
+  return match ? (match.loginValue || match.phone || match.username || raw) : raw;
 }
 
 function areaName(areaId){ return (app.areas.find(a => a.areaId === areaId) || {}).name || areaId || ''; }
@@ -446,7 +740,15 @@ function getFilteredReports(){
 }
 
 function renderAll(){
-  renderKpis(); renderCharts(); renderReportTable(); loadReportForForm(); renderAdminReports(); fillSettingsForm();
+  renderKpis();
+  renderCharts();
+  renderReportTable();
+  renderTodayReportStatus();
+  loadReportForForm();
+  if(adminAuth){
+    renderAdminReports();
+    fillSettingsForm();
+  }
 }
 
 function renderKpis(){
@@ -457,6 +759,40 @@ function renderKpis(){
       <div class="value">${fmt(totals[m.key])}</div>
       <div class="sub">${html(m.label)}</div>
     </div>`).join('');
+}
+
+function makeChartOptions(label, data, extraOptions={}){
+  const maxValue = Math.max(...data, 0);
+  const base = {
+    responsive:true,
+    maintainAspectRatio:false,
+    layout:{ padding:{ top:24 } },
+    plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:(ctx) => `${ctx.dataset.label}: ${fmt(ctx.raw)}` } } },
+    scales:{ y:{ beginAtZero:true, suggestedMax: maxValue * 1.18 || 10 } }
+  };
+  return Object.assign(base, extraOptions);
+}
+
+function createOrUpdateChart(currentChart, canvasId, type, labels, data, label, datasetOptions={}, extraOptions={}){
+  if(typeof Chart === 'undefined') return currentChart;
+  const options = makeChartOptions(label, data, extraOptions);
+  if(!currentChart || currentChart.config.type !== type){
+    if(currentChart) currentChart.destroy();
+    return new Chart($(canvasId), {
+      type,
+      data:{ labels, datasets:[Object.assign({ label, data, borderWidth:3, tension:.25, fill:false }, datasetOptions)] },
+      plugins:[chartValueLabels],
+      options
+    });
+  }
+  currentChart.data.labels = labels;
+  currentChart.data.datasets[0].label = label;
+  currentChart.data.datasets[0].data = data;
+  Object.assign(currentChart.data.datasets[0], datasetOptions);
+  currentChart.options.scales.y.suggestedMax = Math.max(...data, 0) * 1.18 || 10;
+  Object.assign(currentChart.options, extraOptions);
+  currentChart.update('none');
+  return currentChart;
 }
 
 function renderCharts(){
@@ -484,33 +820,29 @@ function renderCharts(){
   }
 
   $('mainChartTitle').textContent = title;
-  if(mainChart) mainChart.destroy();
-  mainChart = new Chart($('mainChart'), {
-    type: mode === 'daily' ? 'line' : 'bar',
-    data:{ labels, datasets:[{ label:title, data, borderWidth:3, tension:.25, fill:false }] },
-    plugins:[chartValueLabels],
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      layout:{ padding:{ top:24 } },
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:(ctx) => `${ctx.dataset.label}: ${fmt(ctx.raw)}` } } },
-      scales:{ y:{ beginAtZero:true, suggestedMax: Math.max(...data, 0) * 1.18 || 10 } }
-    }
-  });
+  const mainType = mode === 'daily' ? 'line' : 'bar';
+  mainChart = createOrUpdateChart(
+    mainChart,
+    'mainChart',
+    mainType,
+    labels,
+    data,
+    title,
+    { borderWidth:3, tension:.25, fill:false },
+    {}
+  );
 
   const areaLabels = app.areas.map(a => a.name);
   const areaData = app.areas.map(a => entries.filter(r => r.areaId === a.areaId).reduce((s,r) => s + metricValue(r, selectedMetric), 0));
-  if(areaChart) areaChart.destroy();
-  areaChart = new Chart($('areaChart'), {
-    type:'bar',
-    data:{ labels:areaLabels, datasets:[{ label:metricLabel(selectedMetric), data:areaData, borderWidth:2 }] },
-    plugins:[chartValueLabels],
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      layout:{ padding:{ top:24 } },
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:(ctx) => `${ctx.dataset.label}: ${fmt(ctx.raw)}` } } },
-      scales:{ y:{ beginAtZero:true, suggestedMax: Math.max(...areaData, 0) * 1.18 || 10 } },
+  areaChart = createOrUpdateChart(
+    areaChart,
+    'areaChart',
+    'bar',
+    areaLabels,
+    areaData,
+    metricLabel(selectedMetric),
+    { borderWidth:2, tension:.25, fill:false },
+    {
       onClick:(event, elements) => {
         if(!elements || !elements.length) return;
         const area = app.areas[elements[0].index];
@@ -520,7 +852,7 @@ function renderCharts(){
         if(event && event.native && event.native.target) event.native.target.style.cursor = elements && elements.length ? 'pointer' : 'default';
       }
     }
-  });
+  );
   renderAreaChartDetail(null);
 }
 
@@ -558,6 +890,55 @@ function renderReportTable(){
     </tr>`).join('');
 }
 
+function renderTodayReportStatus(){
+  const el = $('todayReportStatus');
+  if(!el) return;
+  const from = $('filterFromDate').value;
+  const to = $('filterToDate').value;
+  if(!from || !to || from !== to){
+    el.classList.remove('show');
+    el.innerHTML = '';
+    return;
+  }
+
+  const activeReports = app.reports.filter(r => r.reportDate === from && String(r.status || 'active') !== 'deleted');
+  const reportedAreaIds = new Set(activeReports.map(r => r.areaId).filter(Boolean));
+  const reportedAreas = app.areas.filter(a => reportedAreaIds.has(a.areaId));
+  const missingAreas = app.areas.filter(a => !reportedAreaIds.has(a.areaId));
+  const totals = totalsOf(activeReports);
+
+  const chipList = (areas, type, emptyText) => {
+    if(!areas.length) return `<div class="today-status-empty">${html(emptyText)}</div>`;
+    return `<div class="today-status-chips">${areas.map(a => `<span class="today-area-chip ${type}">${html(a.name || a.areaId)}</span>`).join('')}</div>`;
+  };
+
+  const totalAreas = app.areas.length;
+  const doneText = totalAreas ? `${reportedAreas.length}/${totalAreas} địa bàn` : `${reportedAreas.length} địa bàn`;
+  el.classList.add('show');
+  el.innerHTML = `
+    <div class="today-status-head">
+      <div>
+        <h3>📌 Trạng thái báo cáo ngày ${dateText(from)}</h3>
+        <div class="today-status-sub">Tự động đối chiếu danh sách địa bàn với các dòng báo cáo đã có trong Google Sheet.</div>
+      </div>
+      <div class="btn-row">
+        <span class="pill green">Đã báo cáo: ${html(doneText)}</span>
+        <span class="pill orange">Chưa báo cáo: ${fmt(missingAreas.length)}</span>
+        <span class="pill gray">Tổng lượt: ${fmt(totals.total)}</span>
+      </div>
+    </div>
+    <div class="today-status-grid">
+      <div class="today-status-box">
+        <h4>✅ Địa bàn đã báo cáo</h4>
+        ${chipList(reportedAreas, 'ok', 'Chưa có địa bàn nào gửi báo cáo trong ngày này.')}
+      </div>
+      <div class="today-status-box">
+        <h4>⚠️ Địa bàn chưa báo cáo</h4>
+        ${chipList(missingAreas, 'missing', 'Tất cả địa bàn đã có báo cáo trong ngày này.')}
+      </div>
+    </div>`;
+}
+
 function loadReportForForm(){
   const areaId = $('reportArea').value;
   const reportDate = $('reportDate').value;
@@ -585,7 +966,7 @@ function fillReportFormById(reportId){
 function clearReportFields(includeCredentials=false){
   METRICS.forEach(m => $(m.key).value = '');
   $('reportNote').value = '';
-  if(includeCredentials){ $('authPhone').value = ''; $('authPin').value = ''; }
+  if(includeCredentials){ $('authPhone').value = ''; $('authPin').value = ''; selectedAuthLogin = ''; selectedAuthDisplay = ''; }
   renderCurrentReportInfo(null); renderAreaSummary();
 }
 
@@ -641,15 +1022,22 @@ function openSaveAuthModal(){
   const report = buildReportPayload();
   const error = validateReportPayload(report, false);
   if(error) return showMessage('reportMsg', error, error.startsWith('Đã hủy') ? 'warning' : 'error');
-  rebuildAuthUserList();
+  rebuildAuthUserList(false);
   $('authMsg').innerHTML = '';
   $('authModal').classList.add('show');
-  setTimeout(() => $('authPhone').focus(), 80);
+  setTimeout(() => {
+    $('authPhone').focus();
+    showAuthUserMenu('');
+    ensureAuthUsersLoaded(false);
+  }, 80);
 }
 
 function closeAuthModal(){
   $('authModal').classList.remove('show');
   $('authPin').value = '';
+  selectedAuthLogin = '';
+  selectedAuthDisplay = '';
+  hideAuthUserMenu();
   $('authMsg').innerHTML = '';
 }
 
@@ -664,7 +1052,7 @@ async function saveReport(){
   try{
     showMessage('authMsg', 'Đang lưu dữ liệu vào Google Sheet...', 'warning', true);
     await callApi('upsertReport', {
-      auth:{ phone:$('authPhone').value.trim(), pin:$('authPin').value.trim() },
+      auth:{ phone:resolveAuthLogin($('authPhone').value.trim()), pin:$('authPin').value.trim() },
       report,
       userAgent:navigator.userAgent
     });
@@ -711,7 +1099,7 @@ function switchAdminTab(tab){
 
 async function loadUsers(){
   if(!adminAuth) return;
-  try{ const data = await callApi('listUsers', { auth:adminAuth }); adminUsers = data.users || []; renderUsers(); rebuildAuthUserList(); }
+  try{ const data = await callApi('listUsers', { auth:adminAuth }); adminUsers = extractUsersFromResponse(data).map(normalizeUser); authUsersLoadedOnce = true; renderUsers(); rebuildAuthUserList(); }
   catch(err){ showMessage('userMsg', 'Lỗi tải tài khoản: ' + err.message, 'error', true); }
 }
 
@@ -802,7 +1190,40 @@ function bindEvents(){
   ['filterFromDate','filterToDate','filterArea','viewMode','filterMetric'].forEach(id => $(id).addEventListener('change', scheduleRenderAll));
   ['reportArea','reportDate'].forEach(id => $(id).addEventListener('change', loadReportForForm));
   ['authPhone','authPin'].forEach(id => { const el=$(id); if(el) el.addEventListener('keydown', e => { if(e.key === 'Enter') saveReport(); }); });
+  const authPhone = $('authPhone');
+  if(authPhone){
+    authPhone.addEventListener('focus', () => showAuthUserMenu(authPhone.value ? authPhone.value : ''));
+    authPhone.addEventListener('click', () => showAuthUserMenu(authPhone.value ? authPhone.value : ''));
+    authPhone.addEventListener('input', () => {
+      selectedAuthLogin = '';
+      selectedAuthDisplay = '';
+      renderAuthUserMenu(authPhone.value);
+      $('authUserMenu').classList.add('show');
+    });
+  }
+  const authDropBtn = $('authDropBtn');
+  if(authDropBtn){
+    authDropBtn.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleAuthUserMenu();
+    });
+  }
+  const authMenu = $('authUserMenu');
+  if(authMenu){
+    authMenu.addEventListener('pointerdown', e => {
+      const item = e.target.closest('.auth-user-item');
+      if(!item) return;
+      e.preventDefault();
+      selectAuthUser(item.dataset.value || '', item.dataset.login || '');
+    });
+  }
+  document.addEventListener('pointerdown', e => {
+    const combo = $('authCombo');
+    if(combo && !combo.contains(e.target)) hideAuthUserMenu();
+  });
 }
+
 
 function initDefaults(){
   $('reportDate').value = todayISO();
@@ -811,7 +1232,7 @@ function initDefaults(){
 
 document.addEventListener('DOMContentLoaded', async () => {
   METRICS.forEach(m => { if(!$(m.key)) console.warn('Missing input', m.key); });
-  bindEvents(); initDefaults(); await refreshData(true);
+  bindEvents(); initDefaults(); await refreshData(false);
 });
 </script>
 </body>
