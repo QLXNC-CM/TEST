@@ -395,7 +395,49 @@ const html = s => String(s ?? '').replace(/[&<>'"]/g, c => _ESC[c]);
 const num = v => Number.isFinite(Number(v)) && Number(v) > 0 ? Math.round(Number(v)) : 0;
 const fmt = v => new Intl.NumberFormat('vi-VN').format(num(v));
 const dateText = d => d ? d.split('-').reverse().join('/') : '';
-const nowText = () => new Date().toLocaleString('vi-VN');
+const pad2 = v => String(v).padStart(2,'0');
+function formatDateTimeShort(value){
+  if(!value && value !== 0) return '';
+  const formatDateObj = d => `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())} - ${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
+  if(value instanceof Date && !Number.isNaN(value.getTime())) return formatDateObj(value);
+  if(typeof value === 'number'){
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? String(value) : formatDateObj(d);
+  }
+
+  const raw = String(value || '').trim();
+  if(!raw) return '';
+  const direct = new Date(raw);
+  if(!Number.isNaN(direct.getTime())) return formatDateObj(direct);
+
+  const cleaned = raw
+    .replace(/^(chủ nhật|thứ\s+(hai|ba|tư|tu|năm|nam|sáu|sau|bảy|bay)),?\s*/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const timeMatch = cleaned.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+  const dateMatch = cleaned.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
+  if(timeMatch && dateMatch){
+    const hh = pad2(timeMatch[1]);
+    const mm = pad2(timeMatch[2]);
+    const ss = pad2(timeMatch[3] || '00');
+    const dd = pad2(dateMatch[1]);
+    const mo = pad2(dateMatch[2]);
+    const yy = dateMatch[3];
+    return `${hh}:${mm}:${ss} - ${dd}/${mo}/${yy}`;
+  }
+  const vnDateMatch = cleaned.match(/(\d{1,2})\s*tháng\s*(\d{1,2})(?:,|\s*năm)?\s*(\d{4})/i);
+  if(timeMatch && vnDateMatch){
+    const hh = pad2(timeMatch[1]);
+    const mm = pad2(timeMatch[2]);
+    const ss = pad2(timeMatch[3] || '00');
+    const dd = pad2(vnDateMatch[1]);
+    const mo = pad2(vnDateMatch[2]);
+    const yy = vnDateMatch[3];
+    return `${hh}:${mm}:${ss} - ${dd}/${mo}/${yy}`;
+  }
+  return cleaned;
+}
+const nowText = () => formatDateTimeShort(new Date());
 
 const chartValueLabels = {
   id:'chartValueLabels',
@@ -529,7 +571,7 @@ function loadCachedPublicData(){
     rebuildAuthUserList();
     renderAll();
     setApiStatus('Đang hiển thị nhanh dữ liệu đã tải gần đây, sẽ đồng bộ Google Sheet...', 'wait');
-    $('lastUpdatedPill').textContent = 'Dữ liệu tạm: ' + new Date(cached.cachedAt).toLocaleString('vi-VN');
+    $('lastUpdatedPill').textContent = 'Dữ liệu tạm: ' + formatDateTimeShort(cached.cachedAt);
     return true;
   }catch(err){
     console.warn('Không thể đọc cache tạm:', err.message || err);
@@ -1176,7 +1218,7 @@ function renderReportTable(){
       ${METRICS.map(m => `<td class="num">${fmt(r[m.key])}</td>`).join('')}
       <td class="num">${fmt(reportTotal(r))}</td>
       <td>${html(r.note || '')}</td>
-      <td><span class="pill gray">${html(r.updatedAt || r.createdAt || '')}</span><br><span class="muted small">Lần cập nhật: ${fmt(r.updateCount || 1)}</span></td>
+      <td><span class="pill gray">${html(formatDateTimeShort(r.updatedAt || r.createdAt || ''))}</span><br><span class="muted small">Lần cập nhật: ${fmt(r.updateCount || 1)}</span></td>
       <td><button class="btn btn-light" onclick="fillReportFormById('${html(r.reportId)}')">Sửa</button></td>
     </tr>`).join('');
 }
@@ -1272,7 +1314,7 @@ function renderCurrentReportInfo(entry){
       <div><span class="pill green">${html(areaName(entry.areaId))}</span></div>
       <div><b>Tổng số lượt:</b> ${fmt(reportTotal(entry))}</div>
       <div><b>Số lần cập nhật:</b> ${fmt(entry.updateCount || 1)}</div>
-      <div style="grid-column:1/-1"><b>Cập nhật lúc:</b> ${html(entry.updatedAt || entry.createdAt || '')}</div>
+      <div style="grid-column:1/-1"><b>Cập nhật lúc:</b> ${html(formatDateTimeShort(entry.updatedAt || entry.createdAt || ''))}</div>
       <div style="grid-column:1/-1"><b>Ghi chú:</b> ${html(entry.note || 'Không có')}</div>
     </div>`;
 }
