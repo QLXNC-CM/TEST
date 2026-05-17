@@ -1789,7 +1789,7 @@ function renderKpiLoading(){
 function renderMetricKpiCard(m, value, options={}){
   const rangeText = options.rangeText || '';
   const values = Array.isArray(options.values) ? options.values : [];
-  const trendHtml = options.trendHtml || '<div class="kpi-trend flat">→ Chưa có mốc so sánh</div>';
+  const trendHtml = Object.prototype.hasOwnProperty.call(options, 'trendHtml') ? options.trendHtml : '<div class="kpi-trend flat">→ Chưa có mốc so sánh</div>';
   const subText = options.subText || m.label;
   const dataRange = rangeText ? ` data-range="${html(rangeText)}"` : '';
   return `
@@ -2264,21 +2264,21 @@ function renderAreaSummary(){
   const entries = areaEntries.filter(r => isYesterday ? normalizeReportDateKey(r.reportDate) === targetDate : true);
   const previousEntries = isYesterday
     ? areaEntries.filter(r => normalizeReportDateKey(r.reportDate) === previousDate)
-    : areaEntries.filter(r => normalizeReportDateKey(r.reportDate) === targetDate);
+    : [];
   const totals = totalsOf(entries);
-  const previousTotals = totalsOf(previousEntries);
-  const compareLabel = isYesterday ? 'ngày trước đó' : 'riêng hôm qua';
+  const previousTotals = isYesterday ? totalsOf(previousEntries) : {};
+  const compareLabel = 'ngày trước đó';
 
   if(title) title.textContent = isYesterday ? `Số liệu hôm qua địa bàn ${selectedAreaName}` : `Lũy kế địa bàn ${selectedAreaName}`;
   const meta = isYesterday
     ? `<div class="area-summary-meta"><b>Đang xem:</b> Số liệu hôm qua (${dateText(targetDate)}) của địa bàn ${html(selectedAreaName)}${entries.length ? '' : ' - chưa có dòng báo cáo, tạm hiển thị 0.'}</div>`
-    : `<div class="area-summary-meta"><b>Đang xem:</b> Lũy kế toàn bộ dữ liệu của địa bàn ${html(selectedAreaName)}. Dòng so sánh thể hiện mức chênh so với số liệu riêng ngày hôm qua.</div>`;
+    : `<div class="area-summary-meta"><b>Đang xem:</b> Lũy kế toàn bộ dữ liệu của địa bàn ${html(selectedAreaName)}.</div>`;
 
   $('areaSummary').innerHTML = meta + METRICS.map(m => {
     const values = metricDailySeriesForEntries(areaEntries, m.key, targetDate, 7);
     const trendHtml = isYesterday
       ? metricTrendByPeriodHtml(totals[m.key], previousTotals[m.key], compareLabel)
-      : metricTrendByPeriodHtml(totals[m.key], previousTotals[m.key], compareLabel);
+      : '';
     return renderMetricKpiCard(m, totals[m.key], {
       rangeText: isYesterday
         ? `Số liệu hôm qua (${dateText(targetDate)}) của địa bàn ${selectedAreaName}`
