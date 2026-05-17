@@ -57,11 +57,149 @@
     .filter-summary-card{background:linear-gradient(135deg,var(--card),var(--surface));border-color:var(--line)}html[data-theme="dark"] .filter-summary-card{background:var(--card)}
 
 
+
+    /* Điều chỉnh bổ sung theo yêu cầu: header, nút lọc nhanh, cán bộ phụ trách, KPI đồng bộ và icon form */
+    .hero{
+      grid-template-columns:minmax(280px,.98fr) minmax(360px,1.55fr) minmax(310px,1fr);
+      gap:12px;
+      padding:12px 14px;
+    }
+    .hero-title h1{
+      font-size:16px;
+      line-height:1.35;
+      -webkit-line-clamp:3;
+      text-transform:uppercase;
+    }
+    .hero-actions{
+      display:grid;
+      grid-template-columns:minmax(0,1.15fr) 44px minmax(0,.78fr) 44px;
+      gap:7px;
+      align-items:center;
+    }
+    .hero-actions .btn{min-height:42px}
+    .hero-actions .refresh-icon-btn,.hero-actions .theme-toggle-btn{padding-left:0;padding-right:0}
+    .brand-head{gap:10px}.brand-logo{width:66px;height:66px}
+    .brand-agency div:first-child{font-size:13px}.brand-agency div:last-child{font-size:14px}
+
+    .quick-filter-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+      overflow:visible;
+      padding:4px 0 10px;
+      scroll-snap-type:none;
+    }
+    .quick-filter-row{display:contents}
+    .quick-filter-grid .btn{
+      width:100%;
+      min-height:42px;
+      white-space:normal;
+      line-height:1.25;
+      flex:initial;
+      scroll-snap-align:initial;
+    }
+
+    .responsible-inline{
+      display:grid;
+      gap:6px;
+      margin-top:8px;
+      border:1px solid #e4edf9;
+      background:var(--card);
+      border-radius:var(--radius-sm);
+      padding:8px 10px;
+      font-size:13px;
+      line-height:1.45;
+      text-align:left;
+      color:var(--text);
+    }
+    .responsible-line{
+      display:flex;
+      align-items:center;
+      gap:7px;
+      padding:6px 0;
+      border-bottom:1px dashed var(--line);
+    }
+    .responsible-line:last-child{border-bottom:0}
+    .responsible-line:before{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:var(--primary);
+      flex:0 0 auto;
+      box-shadow:0 0 0 3px var(--focus);
+    }
+
+    .metric-input-card{
+      border:1px solid var(--line);
+      border-radius:var(--radius-md);
+      background:linear-gradient(160deg,var(--card),var(--surface));
+      padding:10px;
+    }
+    .metric-input-label{
+      display:flex;
+      align-items:center;
+      gap:7px;
+      color:var(--primary2);
+      line-height:1.35;
+    }
+    .metric-label-icon{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      background:var(--soft-blue);
+      color:var(--primary2);
+      flex:0 0 auto;
+    }
+    .metric-label-icon .ui-icon{width:16px;height:16px}
+    .metric-input-card .number-stepper input{background:var(--card)}
+
+    #areaSummary.summary-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    #areaSummary .area-summary-meta{grid-column:1/-1}
+    #areaSummary .kpi{min-height:150px}
+    #areaSummary .kpi .label{display:block}
+
+    @media(max-width:980px){
+      .hero{grid-template-columns:1fr;align-items:start}
+      .hero-title{text-align:left}
+      .hero-title h1{font-size:16px;display:block;-webkit-line-clamp:unset;overflow:visible}
+      .hero-actions{justify-content:stretch;width:100%}
+      #areaSummary.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:640px){
+      .hero{
+        border-radius:var(--radius-md);
+        padding:11px 12px;
+        gap:9px;
+      }
+      .brand-head{align-items:center}
+      .brand-logo{width:54px;height:54px}
+      .brand-agency div:first-child{font-size:11px}
+      .brand-agency div:last-child{font-size:12px}
+      .hero-title{text-align:left}
+      .hero-title h1{font-size:13.8px;line-height:1.32}
+      .hero-actions{
+        grid-template-columns:minmax(0,1.2fr) 42px minmax(0,.72fr) 42px;
+        gap:6px;
+      }
+      .hero-actions .btn{min-height:38px;padding:8px 6px;font-size:11px}
+      .quick-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+      .quick-filter-grid .btn{min-height:40px;padding:9px 8px;font-size:12px}
+      #areaSummary.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      #areaSummary .kpi{min-height:138px}
+      .responsible-line{align-items:flex-start}
+      .metric-input-card{padding:9px}
+      .metric-input-label{font-size:12.5px}
+    }
+
   </style>
 </head>
 <body>
   <div class="top-status-bar" role="status" aria-live="polite">
-    <div class="top-status-unit">CÔNG AN TỈNH CÀ MAU — Phòng QLXNC</div>
+    <div class="top-status-unit">PHÒNG QUẢN LÝ XUẤT NHẬP CẢNH, CÔNG AN TỈNH CÀ MAU</div>
     <div class="top-status-connection"><span id="apiDot" class="status-dot wait"></span><span id="apiStatus">Đang chuẩn bị kết nối Google Sheet...</span></div>
   </div>
   <div class="wrap">
@@ -76,7 +214,7 @@
 </div>
       </div>
       <div class="hero-title">
-        <h1 id="appTitle">KẾT QUẢ VẬN ĐỘNG, TUYÊN TRUYỀN CHẤP HÀNH QUY ĐỊNH PHÁP LUẬT</h1>
+        <h1 id="appTitle">KẾT QUẢ VẬN ĐỘNG, TUYÊN TRUYỀN CHẤP HÀNH QUY ĐỊNH PHÁP LUẬT VỀ SỬ DỤNG THIẾT BỊ BAY KHÔNG NGƯỜI LÁI</h1>
       </div>
       <div class="hero-actions">
 <button class="btn btn-light" onclick="scrollToReportForm()">Báo cáo số liệu</button>
@@ -1576,11 +1714,12 @@ function getAreaResponsibleUsers(areaId){
 function renderResponsiblePeople(areaId, emptyText='Chưa có thông tin Tổ trưởng/Tổ phó phụ trách địa bàn trong danh sách tài khoản.'){
   const people = getAreaResponsibleUsers(areaId);
   if(!people.length) return `<div class="filter-summary-sub">${html(emptyText)}</div>`;
-  const line = people.map(u => {
+  const rows = people.map(u => {
     const phone = String(u.phone || '').trim() || 'Chưa có SĐT';
-    return `${safeUserName(u)}-${responsibleTitle(u)}-${phone}`;
-  }).join(' ; ');
-  return `<div class="responsible-inline">${html(line)}</div>`;
+    const line = `${safeUserName(u)}-${responsibleTitle(u)}-${phone}`;
+    return `<div class="responsible-line">${html(line)}</div>`;
+  }).join('');
+  return `<div class="responsible-inline">${rows}</div>`;
 }
 
 function renderFilterSummaryLine(){
@@ -1645,6 +1784,46 @@ function renderKpiLoading(){
       <div class="value"><div class="skeleton" aria-label="Đang tải"></div></div>
       <div class="sub">${html(m.label)}</div>
     </div>`).join('');
+}
+
+function renderMetricKpiCard(m, value, options={}){
+  const rangeText = options.rangeText || '';
+  const values = Array.isArray(options.values) ? options.values : [];
+  const trendHtml = options.trendHtml || '<div class="kpi-trend flat">→ Chưa có mốc so sánh</div>';
+  const subText = options.subText || m.label;
+  const dataRange = rangeText ? ` data-range="${html(rangeText)}"` : '';
+  return `
+    <div class="kpi"${dataRange}>
+      <span class="kpi-icon" aria-hidden="true">${uiIcon(m.icon)}</span>
+      <div class="label">${html(m.short)}</div>
+      <div class="value">${fmt(value)}</div>
+      ${sparklineSvg(values.length ? values : [num(value)])}
+      ${trendHtml}
+      <div class="sub">${html(subText)}</div>
+    </div>`;
+}
+
+function metricTotalOnDate(entries, metricKey, dateValue){
+  return entries
+    .filter(r => normalizeReportDateKey(r.reportDate) === dateValue)
+    .reduce((sum, r) => sum + num(r[metricKey]), 0);
+}
+
+function metricDailySeriesForEntries(entries, metricKey, endDateValue=todayISO(), days=7){
+  const endDate = parseISODateLocal(endDateValue) || parseISODateLocal(todayISO()) || new Date();
+  const keys = [];
+  for(let i=days-1;i>=0;i--){
+    const d = new Date(endDate);
+    d.setDate(d.getDate() - i);
+    keys.push(toISODate(d));
+  }
+  const byDate = Object.create(null);
+  entries.forEach(r => {
+    const key = normalizeReportDateKey(r.reportDate);
+    if(!key) return;
+    byDate[key] = (byDate[key] || 0) + num(r[metricKey]);
+  });
+  return keys.map(k => byDate[k] || 0);
 }
 
 function filteredDateRangeText(entries){
@@ -1762,15 +1941,12 @@ function renderKpis(){
   $('kpiGrid').innerHTML = METRICS.map(m => {
     const values = metricDailySeries(entries, m.key, 7);
     const trendHtml = previousRange ? metricTrendByPeriodHtml(totals[m.key], previousTotals[m.key], compareLabel) : '<div class="kpi-trend flat">→ Chưa có mốc so sánh</div>';
-    return `
-    <div class="kpi" data-range="${html(rangeText)}">
-      <span class="kpi-icon" aria-hidden="true">${uiIcon(m.icon)}</span>
-      <div class="label">${html(m.short)}</div>
-      <div class="value">${fmt(totals[m.key])}</div>
-      ${sparklineSvg(values)}
-      ${trendHtml}
-      <div class="sub">${html(m.label)}</div>
-    </div>`;
+    return renderMetricKpiCard(m, totals[m.key], {
+      rangeText,
+      values,
+      trendHtml,
+      subText:m.label
+    });
   }).join('');
 }
 
@@ -2079,18 +2255,39 @@ function renderAreaSummary(){
 
   const selectedAreaName = areaName(areaId);
   const targetDate = yesterdayISO();
+  const previousDate = addDaysISO(targetDate, -1);
   const isYesterday = areaSummaryMode === 'yesterday';
-  const entries = app.reports.filter(r => {
+  const areaEntries = app.reports.filter(r => {
     if(String(r.status || 'active') === 'deleted') return false;
-    if(!sameAreaValue(r.areaId, areaId)) return false;
-    return isYesterday ? normalizeReportDateKey(r.reportDate) === targetDate : true;
+    return sameAreaValue(r.areaId, areaId);
   });
+  const entries = areaEntries.filter(r => isYesterday ? normalizeReportDateKey(r.reportDate) === targetDate : true);
+  const previousEntries = isYesterday
+    ? areaEntries.filter(r => normalizeReportDateKey(r.reportDate) === previousDate)
+    : areaEntries.filter(r => normalizeReportDateKey(r.reportDate) === targetDate);
   const totals = totalsOf(entries);
-  if(title) title.textContent = isYesterday ? `Số liệu hôm qua địa bàn ${selectedAreaName}` : `Lũy kế địa bàn đang chọn tại phần báo cáo, cập nhật số liệu (${selectedAreaName})`;
+  const previousTotals = totalsOf(previousEntries);
+  const compareLabel = isYesterday ? 'ngày trước đó' : 'riêng hôm qua';
+
+  if(title) title.textContent = isYesterday ? `Số liệu hôm qua địa bàn ${selectedAreaName}` : `Lũy kế địa bàn ${selectedAreaName}`;
   const meta = isYesterday
     ? `<div class="area-summary-meta"><b>Đang xem:</b> Số liệu hôm qua (${dateText(targetDate)}) của địa bàn ${html(selectedAreaName)}${entries.length ? '' : ' - chưa có dòng báo cáo, tạm hiển thị 0.'}</div>`
-    : `<div class="area-summary-meta"><b>Đang xem:</b> Lũy kế toàn bộ dữ liệu của địa bàn ${html(selectedAreaName)}.</div>`;
-  $('areaSummary').innerHTML = meta + METRICS.map(m => `<div class="kpi"><div class="label">${m.icon} ${html(m.short)}</div><div class="value">${fmt(totals[m.key])}</div></div>`).join('');
+    : `<div class="area-summary-meta"><b>Đang xem:</b> Lũy kế toàn bộ dữ liệu của địa bàn ${html(selectedAreaName)}. Dòng so sánh thể hiện mức chênh so với số liệu riêng ngày hôm qua.</div>`;
+
+  $('areaSummary').innerHTML = meta + METRICS.map(m => {
+    const values = metricDailySeriesForEntries(areaEntries, m.key, targetDate, 7);
+    const trendHtml = isYesterday
+      ? metricTrendByPeriodHtml(totals[m.key], previousTotals[m.key], compareLabel)
+      : metricTrendByPeriodHtml(totals[m.key], previousTotals[m.key], compareLabel);
+    return renderMetricKpiCard(m, totals[m.key], {
+      rangeText: isYesterday
+        ? `Số liệu hôm qua (${dateText(targetDate)}) của địa bàn ${selectedAreaName}`
+        : `Lũy kế toàn bộ dữ liệu của địa bàn ${selectedAreaName}`,
+      values,
+      trendHtml,
+      subText:m.label
+    });
+  }).join('');
 }
 
 function buildReportPayload(){
@@ -2248,6 +2445,20 @@ function stepNumberInput(id, delta){
   input.dispatchEvent(new Event('input', { bubbles:true }));
 }
 
+function enhanceMetricLabels(){
+  METRICS.forEach(m => {
+    const input = $(m.key);
+    if(!input) return;
+    const field = input.parentElement;
+    const label = field ? field.querySelector('label') : null;
+    if(!label || label.classList.contains('metric-input-label')) return;
+    const originalText = label.textContent.trim();
+    label.classList.add('metric-input-label');
+    label.innerHTML = `<span class="metric-label-icon" aria-hidden="true">${uiIcon(m.icon)}</span><span>${html(originalText)}</span>`;
+    field.classList.add('metric-input-card');
+  });
+}
+
 function enhanceNumberInputs(){
   METRICS.forEach(m => {
     const input = $(m.key);
@@ -2308,6 +2519,7 @@ function focusTrapHandler(e){
 }
 
 function initUiEnhancements(){
+  enhanceMetricLabels();
   enhanceNumberInputs();
   applyTheme(localStorage.getItem('theme') || '');
   window.addEventListener('scroll', handlePageScroll, { passive:true });
