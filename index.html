@@ -169,7 +169,7 @@
       <div class="table-tools" aria-label="Công cụ tìm kiếm bảng số liệu">
         <div class="table-search-wrap">
           <label for="detailTableSearch">Tìm nhanh</label>
-          <input id="detailTableSearch" type="search" placeholder="Nhập địa bàn hoặc ngày báo cáo..." oninput="filterDetailTable(this.value)" aria-label="Tìm nhanh trong bảng số liệu">
+          <input id="detailTableSearch" type="search" placeholder="Nhập địa bàn hoặc ngày báo cáo..." aria-label="Tìm nhanh trong bảng số liệu">
         </div>
         <button class="btn btn-light" type="button" onclick="resetFilter()">Xem tất cả dữ liệu</button>
       </div>
@@ -328,7 +328,7 @@
   </div>
 
 <script>
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_WqEM6-4zbIO9dbvyv5fWZgft15YZ3_fiSsSktV3C4oX-Z7l4rQEYfmUq1WMY53Sv/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1Ytm7Ha6BWOcCVB-oK-i0I9BrS-XwXyZertmTUEzsbsXj2AbKyvJqi8aiayT-eEs/exec';
 
 const METRICS = [
   { key:'flyerCount', label:'Phát tờ rơi', short:'Tờ rơi', icon:'📄' },
@@ -358,6 +358,7 @@ let pendingAreaMismatch = null;
 let savingReport = false;
 let activeQuickFilter = '';
 let detailTableState = { query:'', sortKey:'date', sortDir:'desc' };
+let detailTableSearchTimer = null;
 let areaSummaryMode = 'cumulative';
 let localUpdatedAtOverrides = {};
 const LOCAL_UPDATED_AT_OVERRIDE_MS = 24 * 60 * 60 * 1000;
@@ -367,12 +368,20 @@ const PUBLIC_CACHE_KEY = 'uav_public_data_cache_v3';
 const PUBLIC_CACHE_MAX_AGE_MS = 10 * 60 * 1000;
 
 const $ = id => document.getElementById(id);
+const _numberFormatterVN = new Intl.NumberFormat('vi-VN');
+const _vnDateOnlyFormatter = new Intl.DateTimeFormat('vi-VN', {
+  timeZone: VIETNAM_TIMEZONE,
+  year:'numeric', month:'2-digit', day:'2-digit'
+});
+const _vnDateTimeFormatter = new Intl.DateTimeFormat('vi-VN', {
+  timeZone: VIETNAM_TIMEZONE,
+  year:'numeric', month:'2-digit', day:'2-digit',
+  hour:'2-digit', minute:'2-digit', second:'2-digit',
+  hour12:false, hourCycle:'h23'
+});
 const dateOffsetISO = (offsetDays=0) => {
   const d = new Date(Date.now() + (offsetDays * 86400000));
-  const parts = new Intl.DateTimeFormat('vi-VN', {
-    timeZone: VIETNAM_TIMEZONE,
-    year:'numeric', month:'2-digit', day:'2-digit'
-  }).formatToParts(d).reduce((acc, part) => {
+  const parts = _vnDateOnlyFormatter.formatToParts(d).reduce((acc, part) => {
     if(part.type !== 'literal') acc[part.type] = part.value;
     return acc;
   }, {});
@@ -383,17 +392,12 @@ const yesterdayISO = () => dateOffsetISO(-1);
 const _ESC = {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'};
 const html = s => String(s ?? '').replace(/[&<>'"]/g, c => _ESC[c]);
 const num = v => Number.isFinite(Number(v)) && Number(v) > 0 ? Math.round(Number(v)) : 0;
-const fmt = v => new Intl.NumberFormat('vi-VN').format(num(v));
+const fmt = v => _numberFormatterVN.format(num(v));
 const dateText = d => d ? d.split('-').reverse().join('/') : '';
 const pad2 = v => String(v).padStart(2,'0');
 function formatDateObjVietnam(d){
   if(!(d instanceof Date) || Number.isNaN(d.getTime())) return '';
-  const parts = new Intl.DateTimeFormat('vi-VN', {
-    timeZone: VIETNAM_TIMEZONE,
-    year:'numeric', month:'2-digit', day:'2-digit',
-    hour:'2-digit', minute:'2-digit', second:'2-digit',
-    hour12:false, hourCycle:'h23'
-  }).formatToParts(d).reduce((acc, part) => {
+  const parts = _vnDateTimeFormatter.formatToParts(d).reduce((acc, part) => {
     if(part.type !== 'literal') acc[part.type] = part.value;
     return acc;
   }, {});
@@ -405,12 +409,7 @@ function formatDatePartsDisplay(yy, mo, dd, hh, mm, ss){
 }
 
 function getVietnamPartsAsUtcDate(d=new Date()){
-  const parts = new Intl.DateTimeFormat('vi-VN', {
-    timeZone: VIETNAM_TIMEZONE,
-    year:'numeric', month:'2-digit', day:'2-digit',
-    hour:'2-digit', minute:'2-digit', second:'2-digit',
-    hour12:false, hourCycle:'h23'
-  }).formatToParts(d).reduce((acc, part) => {
+  const parts = _vnDateTimeFormatter.formatToParts(d).reduce((acc, part) => {
     if(part.type !== 'literal') acc[part.type] = part.value;
     return acc;
   }, {});
@@ -532,10 +531,12 @@ function getFuzzyLocalUpdatedAtOverride(report){
   const reportAreaKeys = areaKeyCollections(report.areaId);
   const now = Date.now();
   let best = null;
+  let changed = false;
   Object.keys(localUpdatedAtOverrides).forEach(key => {
     const item = localUpdatedAtOverrides[key];
     if(!item || now > Number(item.expiresAt || 0)){
       delete localUpdatedAtOverrides[key];
+      changed = true;
       return;
     }
     let keyDate = '';
@@ -555,7 +556,7 @@ function getFuzzyLocalUpdatedAtOverride(report){
       if(!best || Number(item.expiresAt || 0) > Number(best.expiresAt || 0)) best = item;
     }
   });
-  persistLocalUpdatedAtOverrides();
+  if(changed) persistLocalUpdatedAtOverrides();
   return best ? best.value : '';
 }
 
@@ -1071,13 +1072,19 @@ function populateOptions(){
 }
 
 
+const _normalizeSearchTextCache = new Map();
 function normalizeSearchText(s){
-  return String(s || '')
+  const raw = String(s || '');
+  const cached = _normalizeSearchTextCache.get(raw);
+  if(cached !== undefined) return cached;
+  const result = raw
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/đ/g, 'd')
     .trim();
+  if(_normalizeSearchTextCache.size < 2500) _normalizeSearchTextCache.set(raw, result);
+  return result;
 }
 
 
@@ -1487,7 +1494,7 @@ function quickPeriodLabel(key, from, to){
   return text;
 }
 
-function sameAreaValue(userArea, areaId){
+function sameAreaForUser(userArea, areaId){
   if(!userArea || !areaId) return false;
   const area = app.areas.find(a => a.areaId === areaId) || {};
   const userText = normalizeSearchText(userArea);
@@ -1530,7 +1537,7 @@ function getAreaResponsibleUsers(areaId){
       if(status && !['active','hoat dong','dang hoat dong'].includes(status)) return false;
       if(role === 'admin' || role.includes('viewer') || role.includes('chi xem')) return false;
       if(!isAreaResponsibleUser(u)) return false;
-      if(!sameAreaValue(u.areaId, areaId)) return false;
+      if(!sameAreaForUser(u.areaId, areaId)) return false;
       const key = normalizeSearchText([u.phone, u.username, u.fullName].filter(Boolean).join('|'));
       if(!key || seen.has(key)) return false;
       seen.add(key);
@@ -1628,7 +1635,13 @@ function metricDailySeries(entries, metricKey, days=7){
     d.setDate(d.getDate() - i);
     keys.push(toISODate(d));
   }
-  return keys.map(k => entries.filter(r => r.reportDate === k).reduce((s,r)=>s+num(r[metricKey]),0));
+  const byDate = Object.create(null);
+  entries.forEach(r => {
+    const key = normalizeReportDateKey(r.reportDate);
+    if(!key) return;
+    byDate[key] = (byDate[key] || 0) + num(r[metricKey]);
+  });
+  return keys.map(k => byDate[k] || 0);
 }
 
 function sparklineSvg(values){
@@ -1932,7 +1945,7 @@ function renderTodayReportStatus(){
     <div class="today-status-head">
       <div>
         <h3>📌 Trạng thái báo cáo ngày ${dateText(from)} <span class="pill green">${html(doneText)}</span></h3>
-        <div class="today-status-sub">Tự động đối chiếu danh sách địa bàn với các dòng báo cáo đã có trong Google Sheet.</div>
+        <div class="today-status-sub">-----</div>
       </div>
       <div class="btn-row">
         <span class="pill green">Đã báo cáo: ${html(doneText)}</span>
@@ -2046,7 +2059,7 @@ function renderAreaSummary(){
     return isYesterday ? normalizeReportDateKey(r.reportDate) === targetDate : true;
   });
   const totals = totalsOf(entries);
-  if(title) title.textContent = isYesterday ? `Số liệu hôm qua địa bàn ${selectedAreaName}` : `Lũy kế địa bàn đang chọn (${selectedAreaName})`;
+  if(title) title.textContent = isYesterday ? `Số liệu hôm qua địa bàn ${selectedAreaName}` : `Lũy kế địa bàn đang chọn tại phần báo cáo, cập nhật số liệu (${selectedAreaName})`;
   const meta = isYesterday
     ? `<div class="area-summary-meta"><b>Đang xem:</b> Số liệu hôm qua (${dateText(targetDate)}) của địa bàn ${html(selectedAreaName)}${entries.length ? '' : ' - chưa có dòng báo cáo, tạm hiển thị 0.'}</div>`
     : `<div class="area-summary-meta"><b>Đang xem:</b> Lũy kế toàn bộ dữ liệu của địa bàn ${html(selectedAreaName)}.</div>`;
@@ -2142,6 +2155,14 @@ function toggleAdvancedFilter(force){
 function filterDetailTable(query){
   detailTableState.query = query || '';
   renderReportTable();
+}
+
+function debouncedFilterDetailTable(query){
+  if(detailTableSearchTimer) clearTimeout(detailTableSearchTimer);
+  detailTableSearchTimer = setTimeout(() => {
+    detailTableSearchTimer = null;
+    filterDetailTable(query);
+  }, 180);
 }
 
 function sortDetailTable(key){
@@ -2438,6 +2459,8 @@ function bindEvents(){
   ['filterFromDate','filterToDate'].forEach(id => $(id).addEventListener('change', () => { setActiveQuickFilter(''); scheduleRenderAll(); }));
   ['filterArea','viewMode','filterMetric'].forEach(id => $(id).addEventListener('change', () => { updateFilterControlsState(); scheduleRenderAll(); }));
   ['reportArea','reportDate'].forEach(id => $(id).addEventListener('change', loadReportForForm));
+  const detailSearch = $('detailTableSearch');
+  if(detailSearch) detailSearch.addEventListener('input', e => debouncedFilterDetailTable(e.target.value));
   METRICS.forEach(m => { const el = $(m.key); if(el) el.addEventListener('input', () => { validateMetricInput(el); updateReportProgress(); }); });
   ['authPhone','authPin'].forEach(id => { const el=$(id); if(el) el.addEventListener('keydown', e => { if(e.key === 'Enter') saveReport(); }); });
   const authPhone = $('authPhone');
