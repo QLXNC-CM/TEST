@@ -41,6 +41,22 @@
     @media(max-width:640px){.wrap{padding:10px 10px 112px}.top-status-unit{display:none}.hero{position:relative;top:auto;gap:10px}.brand-head{justify-content:flex-start;gap:6px}.brand-logo{width:58px;height:58px}.brand-agency div:first-child{font-size:12px}.brand-agency div:last-child{font-size:13px}.hero-title{text-align:center}.hero-title h1{font-size:15px;line-height:1.32;display:block;-webkit-line-clamp:unset;overflow:visible}.hero-actions{display:grid;grid-template-columns:minmax(0,1.6fr) 44px minmax(0,.9fr) 44px;gap:6px;width:100%;justify-content:stretch}.hero-actions .btn{width:100%;padding:9px 6px;font-size:12px;white-space:nowrap}.card{padding:13px}.grid-2,.grid-3,.grid-4,.grid-6{grid-template-columns:1fr}.advanced-filter-panel{display:none}.advanced-filter-panel.open{display:block}.date-range{grid-template-columns:1fr 1fr}.kpi-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{padding:10px;border-radius:var(--radius-md)}.kpi .value{font-size:20px}.kpi .sub{font-size:11px}.chart-box{height:280px}.today-status-grid{grid-template-columns:1fr}.auth-actions .btn{width:100%}.chart-jump-actions{justify-content:stretch}.chart-jump-actions .btn{width:100%;min-width:0}.mobile-sticky-actions{position:fixed;left:10px;right:10px;bottom:10px;z-index:45;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px;background:rgba(255,255,255,.74);border:1px solid rgba(219,229,241,.74);border-radius:var(--radius-md);box-shadow:0 10px 24px rgba(15,23,42,.11);backdrop-filter:blur(10px);opacity:.9}.mobile-sticky-actions:hover,.mobile-sticky-actions:focus-within{opacity:1}.mobile-sticky-actions .btn{width:100%;padding:10px 6px;border-radius:var(--radius-sm);font-size:11px;opacity:.94}.responsible-list{grid-template-columns:1fr}.area-summary-head{align-items:flex-start}.area-summary-head h2{width:100%;font-size:16px}.area-summary-tabs{width:100%;display:grid;grid-template-columns:1fr 1fr;border-radius:var(--radius-md)}.area-summary-tabs .btn{width:100%;font-size:12px;padding:9px 8px}.filter-summary-main{font-size:15px}.report-area-date-row{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:8px}.report-area-date-row label{font-size:12px;white-space:nowrap}.report-area-date-row input,.report-area-date-row select{font-size:13px;padding:10px 8px}table{min-width:900px}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
+
+    /* Chuẩn hóa UI cho môi trường cơ quan: font, icon SVG và nút nhất quán */
+    :root{
+      --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+      --primary-hover:#0f4ed8;--green-hover:#0b8058;--red-hover:#b91c1c;--orange-hover:#c56a05;
+    }
+    html,body{font-family:var(--font-sans);font-size:15px;line-height:1.5;letter-spacing:0;background:linear-gradient(180deg,#f3f7fc,#f8fbff 42%,#f6f8fb)}
+    .brand-agency{font-weight:800;letter-spacing:.18px}.hero-title h1{font-weight:800;letter-spacing:.01em}.section-title h2{font-weight:800;line-height:1.35}.filter-summary-main{font-weight:800}.kpi .value{font-weight:800}.kpi .label,label{font-weight:700}.btn,.tab,.pill{font-weight:700}
+    .filter-group-label{font-weight:700;text-transform:none;letter-spacing:0;color:var(--primary2)}
+    th{text-transform:none;letter-spacing:0;font-size:12px;font-weight:700;color:#445b78}
+    .btn{border:1px solid transparent;box-shadow:none}.btn-primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover);border-color:var(--primary-hover)}.btn-green{background:var(--green);border-color:var(--green);color:#fff}.btn-green:hover{background:var(--green-hover);border-color:var(--green-hover)}.btn-red{background:var(--red);border-color:var(--red);color:#fff}.btn-red:hover{background:var(--red-hover);border-color:var(--red-hover)}.btn-orange{background:var(--orange);border-color:var(--orange);color:#fff}.btn-orange:hover{background:var(--orange-hover);border-color:var(--orange-hover)}.btn-light{background:var(--surface);color:var(--primary2);border-color:var(--line)}
+    .quick-filter-grid .btn.active-filter,.area-summary-tabs .btn.active-summary-tab,.tab.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 8px 18px rgba(22,93,255,.16)}.report-progress-track i{background:var(--primary)}
+    .ui-icon{width:1.1em;height:1.1em;display:inline-block;vertical-align:-.16em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.section-title-icon .ui-icon{width:24px;height:24px}.kpi .kpi-icon{display:inline-flex;align-items:center;justify-content:center;color:var(--primary2);font-size:22px}.kpi .kpi-icon .ui-icon{width:22px;height:22px}.inline-icon{display:inline-flex;align-items:center;justify-content:center;color:var(--primary2);margin-right:6px}.mini-stat-title,.kpi .label.has-icon{display:flex;align-items:center;gap:4px}.refresh-icon-btn,.theme-toggle-btn{font-size:16px}.refresh-icon-btn .ui-icon,.theme-toggle-btn .ui-icon{width:19px;height:19px}.mobile-sticky-actions .btn{gap:5px}.mobile-sticky-actions .ui-icon{width:15px;height:15px}
+    .filter-summary-card{background:linear-gradient(135deg,var(--card),var(--surface));border-color:var(--line)}html[data-theme="dark"] .filter-summary-card{background:var(--card)}
+
+
   </style>
 </head>
 <body>
@@ -64,9 +80,9 @@
       </div>
       <div class="hero-actions">
 <button class="btn btn-light" onclick="scrollToReportForm()">Báo cáo số liệu</button>
-<button class="btn btn-primary refresh-icon-btn" onclick="refreshData(true)" aria-label="Làm mới dữ liệu" title="Làm mới dữ liệu">↻</button>
+<button class="btn btn-primary refresh-icon-btn" onclick="refreshData(true)" aria-label="Làm mới dữ liệu" title="Làm mới dữ liệu"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M19 11a7 7 0 0 0-12-4l-3 3"/><path d="M5 13a7 7 0 0 0 12 4l3-3"/></svg></button>
 <button class="btn btn-green" onclick="openAdminModal()">Admin</button>
-<button aria-label="Chuyển chế độ sáng tối" class="btn btn-light theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" type="button">🌙</button></div>
+<button aria-label="Chuyển chế độ sáng tối" class="btn btn-light theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" type="button"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15.4A8.5 8.5 0 0 1 8.6 3 7 7 0 1 0 21 15.4z"/></svg></button></div>
     </header>
 
     <section class="section card filter-card">
@@ -125,7 +141,7 @@
 
     <section class="section grid grid-2" id="reportSection">
       <div class="card">
-        <div class="section-title report-title"><h2>📝 Báo cáo/Cập nhật số liệu</h2></div>
+        <div class="section-title report-title"><h2><span class="section-title-icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4h6"/><path d="M9 4a2 2 0 0 0-2 2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-1a2 2 0 0 0-2-2"/><path d="M9 12h6"/><path d="M9 16h4"/></svg></span> Báo cáo/Cập nhật số liệu</h2></div>
         <div class="report-subnote">Có thể chọn lại các ngày trước để điều chỉnh, cập nhật số liệu</div>
         <div class="report-progress" id="reportProgress" aria-live="polite"><span>0/6 hình thức đã nhập</span><div class="report-progress-track"><i style="width:0%"></i></div></div>
         <div class="report-password-note"><span class="pill orange">Cần nhập mật khẩu để xác nhận lưu báo cáo</span></div>
@@ -165,7 +181,7 @@
     </section>
 
     <section class="section card" id="detailTableSection">
-      <div class="section-title"><h2>📋 Bảng số liệu chi tiết</h2><span class="pill gray" id="tableCount">0 dòng</span></div>
+      <div class="section-title"><h2><span class="section-title-icon" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 10h16"/><path d="M9 5v14"/><path d="M15 5v14"/></svg></span> Bảng số liệu chi tiết</h2><span class="pill gray" id="tableCount">0 dòng</span></div>
       <div class="table-tools" aria-label="Công cụ tìm kiếm bảng số liệu">
         <div class="table-search-wrap">
           <label for="detailTableSearch">Tìm nhanh</label>
@@ -180,8 +196,8 @@
 
   <div class="mobile-sticky-actions" aria-label="Thanh thao tác nhanh trên điện thoại">
     <button class="btn btn-primary" onclick="scrollToReportForm()" aria-label="Đi đến phần báo cáo số liệu">BÁO CÁO</button>
-    <button class="btn btn-light" onclick="scrollToChartSection()" aria-label="Đi đến khu vực biểu đồ">📊 BIỂU ĐỒ</button>
-    <button class="btn btn-light" onclick="scrollToTopPage()" aria-label="Về đầu trang">🔝 ĐẦU TRANG</button>
+    <button class="btn btn-light" onclick="scrollToChartSection()" aria-label="Đi đến khu vực biểu đồ"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 19h16"/><path d="M7 16V9"/><path d="M12 16V5"/><path d="M17 16v-4"/></svg><span>BIỂU ĐỒ</span></button>
+    <button class="btn btn-light" onclick="scrollToTopPage()" aria-label="Về đầu trang"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg><span>ĐẦU TRANG</span></button>
   </div>
 
 
@@ -331,12 +347,12 @@
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1Ytm7Ha6BWOcCVB-oK-i0I9BrS-XwXyZertmTUEzsbsXj2AbKyvJqi8aiayT-eEs/exec';
 
 const METRICS = [
-  { key:'flyerCount', label:'Phát tờ rơi', short:'Tờ rơi', icon:'📄' },
-  { key:'commitmentCount', label:'Ký cam kết', short:'Cam kết', icon:'✍️' },
-  { key:'speakerCount', label:'Tuyên truyền qua loa phát thanh', short:'Loa', icon:'📣' },
-  { key:'socialShareCount', label:'Chia sẻ qua mạng xã hội', short:'MXH', icon:'🌐' },
-  { key:'posterCount', label:'Dán poster tuyên truyền tại trụ sở công cộng', short:'Poster', icon:'🪧' },
-  { key:'otherCount', label:'Tuyên truyền trực tiếp tại hộ dân hoặc cuộc họp', short:'Khác', icon:'➕' }
+  { key:'flyerCount', label:'Phát tờ rơi', short:'Tờ rơi', icon:'document' },
+  { key:'commitmentCount', label:'Ký cam kết', short:'Cam kết', icon:'signature' },
+  { key:'speakerCount', label:'Tuyên truyền qua loa phát thanh', short:'Loa', icon:'speaker' },
+  { key:'socialShareCount', label:'Chia sẻ qua mạng xã hội', short:'MXH', icon:'network' },
+  { key:'posterCount', label:'Dán poster tuyên truyền tại trụ sở công cộng', short:'Poster', icon:'poster' },
+  { key:'otherCount', label:'Tuyên truyền trực tiếp tại hộ dân hoặc cuộc họp', short:'Khác', icon:'plus' }
 ];
 
 let app = { areas:[], reports:[], settings:{}, users:[] };
@@ -395,6 +411,17 @@ const num = v => Number.isFinite(Number(v)) && Number(v) > 0 ? Math.round(Number
 const fmt = v => _numberFormatterVN.format(num(v));
 const dateText = d => d ? d.split('-').reverse().join('/') : '';
 const pad2 = v => String(v).padStart(2,'0');
+const UI_ICONS = {
+  document:'<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>',
+  signature:'<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16"/><path d="M16 4l4 4L9 19H5v-4z"/></svg>',
+  speaker:'<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>',
+  network:'<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>',
+  poster:'<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="3" width="12" height="16" rx="2"/><path d="M9 7h6"/><path d="M9 11h6"/><path d="M10 21h4"/></svg>',
+  plus:'<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
+  sun:'<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>',
+  moon:'<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15.4A8.5 8.5 0 0 1 8.6 3 7 7 0 1 0 21 15.4z"/></svg>'
+};
+const uiIcon = name => UI_ICONS[name] || UI_ICONS.plus;
 function formatDateObjVietnam(d){
   if(!(d instanceof Date) || Number.isNaN(d.getTime())) return '';
   const parts = _vnDateTimeFormatter.formatToParts(d).reduce((acc, part) => {
@@ -1613,7 +1640,7 @@ function renderKpiLoading(){
   if(!grid) return;
   grid.innerHTML = METRICS.map(m => `
     <div class="kpi kpi-loading" data-range="Đang tải dữ liệu">
-      <span class="kpi-icon" aria-hidden="true">${m.icon}</span>
+      <span class="kpi-icon" aria-hidden="true">${uiIcon(m.icon)}</span>
       <div class="label">${html(m.short)}</div>
       <div class="value"><div class="skeleton" aria-label="Đang tải"></div></div>
       <div class="sub">${html(m.label)}</div>
@@ -1737,7 +1764,7 @@ function renderKpis(){
     const trendHtml = previousRange ? metricTrendByPeriodHtml(totals[m.key], previousTotals[m.key], compareLabel) : '<div class="kpi-trend flat">→ Chưa có mốc so sánh</div>';
     return `
     <div class="kpi" data-range="${html(rangeText)}">
-      <span class="kpi-icon" aria-hidden="true">${m.icon}</span>
+      <span class="kpi-icon" aria-hidden="true">${uiIcon(m.icon)}</span>
       <div class="label">${html(m.short)}</div>
       <div class="value">${fmt(totals[m.key])}</div>
       ${sparklineSvg(values)}
@@ -1863,7 +1890,7 @@ function renderAreaChartDetail(areaId){
   el.innerHTML = `
     <div class="chart-detail-title">${html(areaName(areaId))} - chi tiết theo hình thức</div>
     <div class="mini-stat-grid">
-      ${METRICS.map(m => `<div class="mini-stat">${m.icon} ${html(m.short)}<b>${fmt(totals[m.key])}</b></div>`).join('')}
+      ${METRICS.map(m => `<div class="mini-stat"><span class="mini-stat-title"><span class="inline-icon">${uiIcon(m.icon)}</span>${html(m.short)}</span><b>${fmt(totals[m.key])}</b></div>`).join('')}
     </div>`;
 }
 
@@ -2249,7 +2276,7 @@ function applyTheme(theme){
   else document.documentElement.removeAttribute('data-theme');
   const btn = $('themeToggleBtn');
   const currentDark = document.documentElement.getAttribute('data-theme') === 'dark' || (!document.documentElement.getAttribute('data-theme') && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  if(btn){ btn.textContent = currentDark ? '☀️' : '🌙'; btn.setAttribute('aria-label', currentDark ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'); }
+  if(btn){ btn.innerHTML = uiIcon(currentDark ? 'sun' : 'moon'); btn.setAttribute('aria-label', currentDark ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'); btn.setAttribute('title', currentDark ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'); }
 }
 function toggleTheme(){
   const current = document.documentElement.getAttribute('data-theme');
