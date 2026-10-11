@@ -6433,6 +6433,16 @@ html.gate-open .lang-gate {
     .rp-call { box-shadow: none; border: 1px solid #b51f19; }
     .rp-slogan { background: #fff !important; color: #12352e !important; }
 }
+
+/* Khẩu hiệu chân bảng 5 bước: luôn nằm trên một dòng ở điện thoại */
+@media (max-width: 720px) {
+    .rp-slogan {
+        padding: 14px 10px;
+        white-space: nowrap;
+        letter-spacing: -.01em;
+        font-size: min(calc(16px + var(--font-step)), 3.85vw);
+    }
+}
 </style>
 </head><body id="top">
 <div class="lang-gate" id="lang-gate" role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-choose-label">
